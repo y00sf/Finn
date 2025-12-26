@@ -3,38 +3,38 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
 public class PlayerMovement : MonoBehaviour
 {
-    public Transform cameraTransform;
+    [SerializeField] private Transform cameraTransform;
 
-    public float moveSpeed = 6f;
-    public float accel = 30f;
-    public float decel = 40f;
-    public float turnSpeedDeg = 720f;
+    [SerializeField] private float moveSpeed = 6f;
+    [SerializeField] private float accel = 30f;
+    [SerializeField] private float decel = 40f;
+    [SerializeField] private float turnSpeedDeg = 720f;
 
-    public float jumpSpeed = 7f;
-    public float coyoteTime = 0.12f;
-    public float jumpBufferTime = 0.12f;
+    [SerializeField] private float jumpSpeed = 7f;
+    [SerializeField] private float coyoteTime = 0.12f;
+    [SerializeField] private float jumpBufferTime = 0.12f;
 
-    public LayerMask groundLayers;
-    public float groundProbeRadius = 0.22f;
-    public float groundProbeDistance = 0.35f;
-    public float groundSnapDownSpeed = 2f;
+    [SerializeField] private LayerMask groundLayers;
+    [SerializeField] private float groundProbeRadius = 0.22f;
+    [SerializeField] private float groundProbeDistance = 0.35f;
+    [SerializeField] private float groundSnapDownSpeed = 2f;
 
-    Rigidbody rb;
-    Vector2 moveAxis;
-    Vector3 moveDirWorld;
+    private Rigidbody rb;
+    private Vector2 moveAxis;
+    private Vector3 moveDirWorld;
 
-    bool grounded;
-    float coyoteTimer;
-    float jumpBufferTimer;
+    private bool grounded;
+    private float coyoteTimer;
+    private float jumpBufferTimer;
 
-    void Awake()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
-    void Update()
+    private void Update()
     {
         moveAxis = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         if (moveAxis.sqrMagnitude < 0.01f) moveAxis = Vector2.zero;
@@ -62,7 +62,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         CheckGround();
 
@@ -98,7 +98,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void CheckGround()
+    private void CheckGround()
     {
         Vector3 origin = transform.position + Vector3.up * 0.05f;
 
