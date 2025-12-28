@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e77dfacaefcf0c14d90cf37f42e50495, type: 3}
+  m_Name: 1
+  m_EditorClassIdentifier: 
+  SpeakerName: Turtel
+  sprite: {fileID: 0}
+  questionText: Hmmm......So do you want to learn how to fish you say?
+  choices:
+  - text: Yeah....I want to become like my dad.... No I want to be better than him!
+    nextDialogue: {fileID: 11400000, guid: 309ff1ab6ff75094c839c3ca27691985, type: 2}
+  rect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
