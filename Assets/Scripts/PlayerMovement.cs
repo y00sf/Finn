@@ -3,8 +3,6 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private Transform cameraTransform;
-
     [SerializeField] private float moveSpeed = 6f;
     [SerializeField] private float accel = 30f;
     [SerializeField] private float decel = 40f;
@@ -13,10 +11,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpSpeed = 7f;
     [SerializeField] private float coyoteTime = 0.12f;
     [SerializeField] private float jumpBufferTime = 0.12f;
+    [SerializeField] private float jumpCooldown = 0.2f;
 
     [SerializeField] private LayerMask groundLayers;
-    [SerializeField] private float groundProbeRadius = 0.22f;
-    [SerializeField] private float groundProbeDistance = 0.35f;
+    [SerializeField] private float groundProbeRadius = 0.2f;
+    [SerializeField] private float groundProbeDistance = 0.1f;
     [SerializeField] private float groundSnapDownSpeed = 2f;
 
     private Rigidbody rb;
@@ -26,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private bool grounded;
     private float coyoteTimer;
     private float jumpBufferTimer;
+    private float jumpCooldownTimer;
 
     private void Awake()
     {
@@ -37,29 +37,23 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         moveAxis = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        if (moveAxis.sqrMagnitude < 0.01f) moveAxis = Vector2.zero;
-        else moveAxis.Normalize();
+        if (moveAxis.sqrMagnitude > 0.01f) 
+        {
+            moveAxis.Normalize();
+        }
+        else 
+        {
+            moveAxis = Vector2.zero;
+        }
 
         if (Input.GetButtonDown("Jump"))
             jumpBufferTimer = jumpBufferTime;
 
         if (jumpBufferTimer > 0f) jumpBufferTimer -= Time.deltaTime;
         if (coyoteTimer > 0f) coyoteTimer -= Time.deltaTime;
+        if (jumpCooldownTimer > 0f) jumpCooldownTimer -= Time.deltaTime;
 
-        if (moveAxis == Vector2.zero)
-        {
-            moveDirWorld = Vector3.zero;
-        }
-        else if (cameraTransform == null)
-        {
-            moveDirWorld = new Vector3(moveAxis.x, 0f, moveAxis.y).normalized;
-        }
-        else
-        {
-            Vector3 f = cameraTransform.forward; f.y = 0f; f.Normalize();
-            Vector3 r = cameraTransform.right;   r.y = 0f; r.Normalize();
-            moveDirWorld = (r * moveAxis.x + f * moveAxis.y).normalized;
-        }
+        moveDirWorld = new Vector3(moveAxis.x, 0f, moveAxis.y);
     }
 
     private void FixedUpdate()
@@ -74,6 +68,10 @@ public class PlayerMovement : MonoBehaviour
 
         planar = Vector3.MoveTowards(planar, targetPlanar, rate * Time.fixedDeltaTime);
 
+        if (moveDirWorld.sqrMagnitude == 0f && planar.sqrMagnitude < 0.2f)
+        {
+            planar = Vector3.zero;
+        }
         if (grounded && v.y <= 0f)
             v.y = -groundSnapDownSpeed;
 
@@ -83,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
             coyoteTimer = 0f;
             v.y = jumpSpeed;
             grounded = false;
+            jumpCooldownTimer = jumpCooldown;
         }
 
         rb.linearVelocity = new Vector3(planar.x, v.y, planar.z);
@@ -100,9 +99,15 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckGround()
     {
-        Vector3 origin = transform.position + Vector3.up * 0.05f;
+        if (jumpCooldownTimer > 0f)
+        {
+            grounded = false;
+            return;
+        }
+        
+        Vector3 origin = transform.position + Vector3.up * 0.1f;
 
-        grounded = Physics.SphereCast(
+        bool hit = Physics.SphereCast(
             origin,
             groundProbeRadius,
             Vector3.down,
@@ -111,6 +116,8 @@ public class PlayerMovement : MonoBehaviour
             groundLayers,
             QueryTriggerInteraction.Ignore
         );
+
+        grounded = hit;
 
         if (grounded)
             coyoteTimer = coyoteTime;
