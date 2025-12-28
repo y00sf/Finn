@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_Water
-  m_Shader: {fileID: -6465566751694194690, guid: c66e3badd2ad5cc41999c25f4870500c, type: 3}
+  m_Name: Water Mat
+  m_Shader: {fileID: -6465566751694194690, guid: 33b32787b2eca904a8311ca332197393, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -38,23 +38,30 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Depth: 0.11
+    - _Depth: 0.17
     - _DisplacementMax: 1
-    - _DisplacementMin: 0.9
-    - _Inner_Thickness: 4.89
-    - _Noise_Details: 0.1
-    - _Noise_Scale: 20.69
-    - _Outer_Thickness: -2.68
-    - _Outline: 2.06
+    - _DisplacementMin: 0.8
+    - _FoamDrag: 0.36
+    - _FoamStrong: 1.49
+    - _Inner_Thickness: 4.08
+    - _Noise_Details: 0.2
+    - _Noise_Scale: 18.75
+    - _Outer_Thickness: -0.63
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Trans: 4.18
+    - _WaveHightMax: 0.43
+    - _WaveHightMin: 0.3
+    - _WaveHightOffset: -0.37
     - _WaveMax: 1.1
     - _WaveMin: 0.9
-    m_Colors: []
+    - _WaveSpeed: 0.84
+    - _WaveStrong: 0.5
+    m_Colors:
+    - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
+    - _test: {r: 1.97, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &3505872905206861225
+--- !u!114 &8403128615827135499
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
