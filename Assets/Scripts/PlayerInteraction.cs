@@ -110,7 +110,7 @@ public class PlayerInteraction : MonoBehaviour
                 float dotProduct = Vector3.Dot(interactionTransform.forward, directionToTarget);
                 
                 // Only consider objects in front and pick the closest one
-                if (dotProduct > forwardBias && distance < closestDistance)
+                if (distance < closestDistance)
                 {
                     closest = interactableComponent;
                     closestDistance = distance;
@@ -121,7 +121,8 @@ public class PlayerInteraction : MonoBehaviour
         // Update interactable reference if it changed
         if (interactable != closest)
         {
-            interactable?.UnInteract();
+            closest?.UnInteract();
+            interactable?.Interact();
             interactable = closest;
         }
     }
