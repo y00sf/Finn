@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    pixelSize: 252
+    pixelSize: 287
     renderPassEvent: 550
     pixelationMaterial: {fileID: 2100000, guid: f8c5e75cd79a77b4cb988b02661dfcc4, type: 2}
 --- !u!114 &11400000
