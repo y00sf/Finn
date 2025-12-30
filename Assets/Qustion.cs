@@ -12,6 +12,7 @@ public class Question : ScriptableObject
    [TextArea]
    public string questionText;
    public List<Choice> choices;
+   public AudioClip audioClip;
    
    
    public Rect rect;

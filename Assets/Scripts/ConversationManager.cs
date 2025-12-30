@@ -1,29 +1,79 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
+
+[System.Serializable]
+public struct DialogueEntry
+{
+    public string conversationID;
+    public Question question;
+}
 public class ConversationManager : MonoBehaviour
 {
+    public static ConversationManager Instance { get; private set; }
     [Header("Dependencies")]
-    public DialogueUI dialogueUI;
-    public GameObject dialogueCanvas;
+   [SerializeField] private DialogueUI dialogueUI;
+    [SerializeField] private GameObject dialogueCanvas;
 
+    [Header("Conversations")]
+    public List<DialogueEntry> conversation;
     [Header("Data")]
     public Question currentQuestion;
+    private bool isConversationActive = false;
 
+    public UnityEvent OnConversationStart;
+    public UnityEvent OnConversationEnd;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     private void Start()
     {
-        if(dialogueCanvas != null) dialogueCanvas.SetActive(false);
+        if (dialogueCanvas != null)
+        {
+            dialogueCanvas.SetActive(false);
+        }
     }
 
     
     public void StartConversation(Question startingQuestion)
     {
+        if (startingQuestion != null)
+        {
+            Debug.Log("Starting conversation with a null question");
+            return;
+        }
         currentQuestion = startingQuestion;
-        
-        if(dialogueCanvas != null) dialogueCanvas.SetActive(true);
-        
+        isConversationActive = true;
+        if (dialogueCanvas != null)
+        {
+            dialogueCanvas.SetActive(true);
+        }
+        OnConversationStart?.Invoke();
         UpdateUI();
+    }
+    
+    private void EndConversation()
+    {
+        Debug.Log("Conversation Ended.");
+        isConversationActive = false;
+        currentQuestion = null;
+        if (dialogueCanvas != null)
+        {
+            dialogueCanvas.SetActive(false);
+        }
+        OnConversationEnd?.Invoke();
     }
 
     private void OnEnable()
@@ -63,10 +113,17 @@ public class ConversationManager : MonoBehaviour
         }
     }
 
-    private void EndConversation()
+   
+
+
+    private void SelectNextConversation(int choiceIndex)
     {
-        Debug.Log("Conversation Ended.");
-        if(dialogueCanvas != null) dialogueCanvas.SetActive(false);
-        currentQuestion = null;
+        for (int i = 0; i < conversation.Count; i++)
+        {
+            if (i == choiceIndex)
+            {
+                currentQuestion = conversation[i].question;
+            }
+        }
     }
 }
