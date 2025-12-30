@@ -4,7 +4,7 @@ using UnityEngine;
 public class DialogueNPC : MonoBehaviour
 {
     [Header("Conversation Settings")]
-    public string defaultConversationID = "";
+    public string defaultConversationID;
 
     [Header("Conversation Registry")]
     public List<DialogueEntry> allConversations;
@@ -21,6 +21,7 @@ public class DialogueNPC : MonoBehaviour
     {
         Question questionToPlay = GetQuestionByID(id);
         
+        Debug.Log(questionToPlay);
         if (questionToPlay != null)
         {
             ConversationManager.Instance.StartConversation(questionToPlay);

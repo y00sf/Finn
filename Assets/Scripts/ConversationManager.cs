@@ -42,7 +42,7 @@ public class ConversationManager : MonoBehaviour
     {
         if (dialogueCanvas != null)
         {
-            dialogueCanvas.SetActive(false);
+            dialogueCanvas.SetActive(true);
         }
     }
 
