@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class FishingMiniGame : MonoBehaviour
 {
+    
+    [SerializeField] private GameObject gamePanel;
     [Header("UI Elements")]
     [SerializeField] private RectTransform pointer;
     [SerializeField] private RectTransform Target;
@@ -12,35 +14,64 @@ public class FishingMiniGame : MonoBehaviour
     [SerializeField] private float speed = 200f;
     [SerializeField] private float speedIncrease = 50f;
     [SerializeField] private int counterCount;
-    [SerializeField] private float hitTolerance = 15f;
-    [SerializeField] private int health;
+    [SerializeField] private float hitTolerance = 25f;
+    [SerializeField] private int health = 3;
     
     
-    
-    [SerializeField] private bool isClockwise = true;
+    private float currentSpeed;
+    private int currentCounter;
+    private int currentHealth;
+    private bool isClockwise = true;
+    private bool isActive;
     
     void Start()
     {
-        UpdateCounterUI();
+        UpdateUI();
         ChangeTargetRot();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
 
+        if (!isActive)
+        {
+;         return;
+        }
        
         float directionMultiplier = isClockwise ? -1f : 1f;
         
        
-        pointer.Rotate(Vector3.forward * directionMultiplier * speed * Time.deltaTime);
+        pointer.Rotate(Vector3.forward * directionMultiplier * currentSpeed * Time.deltaTime);
 
        
         if (Input.GetMouseButtonDown(0)) 
         {
             CheckHit();
         }
+    }
+
+
+    public void StartFishing()
+    {
+        ResetGameValues();
+        
+        if (gamePanel != null)
+            gamePanel.SetActive(true);
+            
+        isActive = true;
+        
+        ChangeTargetRot();
+        UpdateUI();
+    }
+    
+    private void ResetGameValues()
+    {
+        currentSpeed = speed;
+        currentCounter = counterCount;
+        currentHealth = health;
+        isClockwise = true;
+        pointer.rotation = Quaternion.identity; 
     }
 
     void CheckHit()
@@ -62,9 +93,16 @@ public class FishingMiniGame : MonoBehaviour
         }
     }
 
-    private void UpdateCounterUI()
+    private void UpdateUI()
     {
-        counterText.text = counterCount.ToString();
+        if (counterText != null)
+        {
+            counterText.text = currentCounter.ToString();
+        }
+        if (healthText != null)
+        {
+            healthText.text = currentHealth.ToString();
+        }
     }
 
     private void ChangeTargetRot()
@@ -78,28 +116,50 @@ public class FishingMiniGame : MonoBehaviour
 
     private void OnFail()
     {
-        health--;
-        healthText.text = health.ToString();
-        if (health <= 0)
+        currentHealth--;
+        UpdateUI();
+
+        if (currentHealth <= 0)
         {
-            Debug.Log("Game Over");
+            EndGame(false);
         }
     }
 
     private void OnSuccess()
     {
-        counterCount--;
-        UpdateCounterUI();
+        currentCounter--;
+        UpdateUI();
 
-        if (counterCount <= 0)
+        if (currentCounter <= 0)
         {
-            Debug.Log("Win");
+            EndGame(true);
             return;
         }
         isClockwise = !isClockwise;
-        
-        speed += speedIncrease;
+        currentSpeed += speedIncrease;
         
         ChangeTargetRot();
+    }
+    
+    
+    private void EndGame(bool playerWon)
+    {
+        isActive = false;
+
+        if (gamePanel != null)
+        {
+            gamePanel.SetActive(false);
+        }
+          
+
+        if (playerWon)
+        {
+            Debug.Log("FISH CAUGHT!");
+            
+        }
+        else
+        {
+            Debug.Log("FISH ESCAPED!");
+        }
     }
 }
