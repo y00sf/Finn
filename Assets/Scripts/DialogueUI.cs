@@ -4,57 +4,85 @@ using UnityEngine.UI;
 
 public class DialogueUI : MonoBehaviour
 {
-    [Header("UI References")]
-    [SerializeField] private TextMeshProUGUI speakerNameText;
-    [SerializeField] private TextMeshProUGUI dialogueText;
+[Header("Position Settings")]
+    public float heightOffset = 2.5f;
+    public Transform playerTransform;
+
+    [Header("NPC Dialogue Settings")]
+    [SerializeField] private GameObject npcBubble;
+    [SerializeField] private TextMeshProUGUI npcText;
+
+    [Header("Player Dialogue Settings")]
+    [SerializeField] private GameObject playerBubble;
+    [SerializeField] private TextMeshProUGUI playerText;
+
+    [Header("Shared References")]
     public Button[] dialogueButtons;
 
-    [Header("World Space Settings")]
-    public float heightOffset = 2.0f; 
-    public GameObject defaultSpeaker; 
+    private Transform currentNpcTransform;
+
+    public void SetCurrentNPC(Transform npc)
+    {
+        currentNpcTransform = npc;
+    }
 
     public void DisplayDialogue(Question question)
     {
         if (question == null) return;
 
-       
-        MoveCanvasToSpeaker(question.SpeakerName);
-        
-        
-        if(speakerNameText != null) speakerNameText.text = question.SpeakerName;
-        if(dialogueText != null) dialogueText.text = question.questionText;
+        // 1. Disable bubbles initially
+        if (npcBubble != null) npcBubble.SetActive(false);
+        if (playerBubble != null) playerBubble.SetActive(false);
 
-      
-        for (int i = 0; i < dialogueButtons.Length; i++)
+        // 2. Hide buttons (since we are auto-playing)
+        foreach (var btn in dialogueButtons) btn.gameObject.SetActive(false);
+
+        // 3. Show the correct bubble
+        if (question.SpeakerName == "Player")
         {
-            if (i < question.choices.Count)
-            {
-                dialogueButtons[i].gameObject.SetActive(true);
-                dialogueButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = question.choices[i].text;
-            }
-            else
-            {
-                dialogueButtons[i].gameObject.SetActive(false);
-            }
-        }
-    }
-
-    private void MoveCanvasToSpeaker(string nameToFind)
-    {
-        GameObject speakerObj = GameObject.Find(nameToFind);
-
-        if (speakerObj != null)
-        {
-            
-            transform.position = speakerObj.transform.position + Vector3.up * heightOffset;
+            ShowPlayerDialogue(question.questionText);
         }
         else
         {
-            if (defaultSpeaker != null)
+            ShowNPCDialogue(question.questionText);
+        }
+    }
+
+    private void ShowNPCDialogue(string text)
+    {
+        if (npcBubble != null)
+        {
+            // Position Logic
+            if (currentNpcTransform != null)
             {
-                transform.position = defaultSpeaker.transform.position + Vector3.up * heightOffset;
+                npcBubble.transform.position = currentNpcTransform.position + Vector3.up * heightOffset;
             }
-            Debug.LogWarning($"Could not find a GameObject named '{nameToFind}'. Ensure Scene Object matches Dialogue Speaker Name.");
+
+            // Text Logic
+            if (npcText != null) npcText.text = text;
+            npcBubble.SetActive(true);
+
+            // FORCE REFRESH: Tells Unity to resize the ContentSizeFitter NOW, not next frame
+            LayoutRebuilder.ForceRebuildLayoutImmediate(npcBubble.GetComponent<RectTransform>());
+        }
+    }
+
+    private void ShowPlayerDialogue(string text)
+    {
+        if (playerBubble != null)
+        {
+            // Position Logic
+            if (playerTransform != null)
+            {
+                playerBubble.transform.position = playerTransform.position + Vector3.up * heightOffset;
+            }
+
+            // Text Logic
+            if (playerText != null) playerText.text = text;
+            playerBubble.SetActive(true);
+
+            // FORCE REFRESH
+            LayoutRebuilder.ForceRebuildLayoutImmediate(playerBubble.GetComponent<RectTransform>());
         }
     }
 }

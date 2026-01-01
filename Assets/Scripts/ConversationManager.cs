@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -13,83 +14,82 @@ public struct DialogueEntry
 }
 public class ConversationManager : MonoBehaviour
 {
-    public static ConversationManager Instance { get; private set; }
+  public static ConversationManager Instance { get; private set; }
+
     [Header("Dependencies")]
-   [SerializeField] private DialogueUI dialogueUI;
+    [SerializeField] private DialogueUI dialogueUI;
     [SerializeField] private GameObject dialogueCanvas;
+
+    [Header("Settings")]
+    public float autoAdvanceDelay = 3.0f;
 
     [Header("Conversations")]
     public List<DialogueEntry> conversation;
+    
     [Header("Data")]
     public Question currentQuestion;
-    private bool isConversationActive = false;
+    private Coroutine autoAdvanceCoroutine;
 
     public UnityEvent OnConversationStart;
     public UnityEvent OnConversationEnd;
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
-    private void Start()
+    public void StartConversation(Question startingQuestion, Transform npcSpeaker)
     {
-        if (dialogueCanvas != null)
-        {
-            dialogueCanvas.SetActive(true);
-        }
-    }
+        if (startingQuestion == null) return;
 
-    
-    public void StartConversation(Question startingQuestion)
-    {
-        if (startingQuestion != null)
-        {
-            Debug.Log("Starting conversation with a null question");
-            return;
-        }
         currentQuestion = startingQuestion;
-        isConversationActive = true;
-        if (dialogueCanvas != null)
-        {
-            dialogueCanvas.SetActive(true);
-        }
+        
+        if (dialogueUI != null) dialogueUI.SetCurrentNPC(npcSpeaker);
+
+        if (dialogueCanvas != null) dialogueCanvas.SetActive(true);
+
         OnConversationStart?.Invoke();
         UpdateUI();
     }
-    
+
     private void EndConversation()
     {
-        Debug.Log("Conversation Ended.");
-        isConversationActive = false;
+        if (dialogueCanvas != null) dialogueCanvas.SetActive(false);
+        
+        if (autoAdvanceCoroutine != null) StopCoroutine(autoAdvanceCoroutine);
+        
         currentQuestion = null;
-        if (dialogueCanvas != null)
-        {
-            dialogueCanvas.SetActive(false);
-        }
         OnConversationEnd?.Invoke();
     }
 
-    private void OnEnable()
+    private void UpdateUI()
     {
-        ChoiceHandler.OnChoiceMade += AdvanceConversation;
+        if (dialogueUI != null && currentQuestion != null)
+        {
+            dialogueUI.DisplayDialogue(currentQuestion);
+
+            if (autoAdvanceCoroutine != null) StopCoroutine(autoAdvanceCoroutine);
+            autoAdvanceCoroutine = StartCoroutine(WaitAndAutoAdvance());
+        }
     }
 
-    private void OnDisable()
+    private IEnumerator WaitAndAutoAdvance()
     {
-        ChoiceHandler.OnChoiceMade -= AdvanceConversation;
+        yield return new WaitForSeconds(autoAdvanceDelay);
+
+        if (currentQuestion.choices != null && currentQuestion.choices.Count > 0)
+        {
+            AdvanceConversation(0);
+        }
+        else
+        {
+            EndConversation();
+        }
     }
 
-    private void AdvanceConversation(int choiceIndex)
+    public void AdvanceConversation(int choiceIndex)
     {
         if (currentQuestion == null) return;
-        
         if (choiceIndex >= currentQuestion.choices.Count) return;
 
         Question nextNode = currentQuestion.choices[choiceIndex].nextDialogue;
@@ -102,28 +102,6 @@ public class ConversationManager : MonoBehaviour
         else
         {
             EndConversation();
-        }
-    }
-
-    private void UpdateUI()
-    {
-        if (dialogueUI != null && currentQuestion != null)
-        {
-            dialogueUI.DisplayDialogue(currentQuestion);
-        }
-    }
-
-   
-
-
-    private void SelectNextConversation(int choiceIndex)
-    {
-        for (int i = 0; i < conversation.Count; i++)
-        {
-            if (i == choiceIndex)
-            {
-                currentQuestion = conversation[i].question;
-            }
         }
     }
 }

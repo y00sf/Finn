@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77dfacaefcf0c14d90cf37f42e50495, type: 3}
-  m_Name: 3
+  m_Name: 5
   m_EditorClassIdentifier: 
   SpeakerName: Player
   sprite: {fileID: 0}
-  questionText: 'my name is Finn i came here to learn more about my father '
+  questionText: (Finn says his fathers name)
   choices:
   - text: 
-    nextDialogue: {fileID: 11400000, guid: 8e56816d5ea733d468d9d5b5431ab188, type: 2}
+    nextDialogue: {fileID: 11400000, guid: 211609a4d876dc445a862a6bf18a0aa0, type: 2}
     choiceAudio: {fileID: 0}
   audioClip: {fileID: 0}
   rect:

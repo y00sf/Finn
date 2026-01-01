@@ -10,15 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77dfacaefcf0c14d90cf37f42e50495, type: 3}
-  m_Name: 3
+  m_Name: 6
   m_EditorClassIdentifier: 
-  SpeakerName: Player
+  SpeakerName: turtle
   sprite: {fileID: 0}
-  questionText: 'my name is Finn i came here to learn more about my father '
-  choices:
-  - text: 
-    nextDialogue: {fileID: 11400000, guid: 8e56816d5ea733d468d9d5b5431ab188, type: 2}
-    choiceAudio: {fileID: 0}
+  questionText: (fathers name) is your father i knew him once what a great fisher
+    he was. if you are really his son then show me what you got !
+  choices: []
   audioClip: {fileID: 0}
   rect:
     serializedVersion: 2

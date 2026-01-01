@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpeakerName: turtle
   sprite: {fileID: 0}
-  questionText: (fathers name) is your father i knew him once what a great fisher
-    he was. if you are really his son then show me what you got !
-  choices: []
+  questionText: your father you say ? who is this father of yours
+  choices:
+  - text: 
+    nextDialogue: {fileID: 11400000, guid: 93587b303f359b144a84f379c2d128e9, type: 2}
+    choiceAudio: {fileID: 0}
   audioClip: {fileID: 0}
   rect:
     serializedVersion: 2

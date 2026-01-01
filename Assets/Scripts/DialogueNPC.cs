@@ -9,22 +9,18 @@ public class DialogueNPC : MonoBehaviour
     [Header("Conversation Registry")]
     public List<DialogueEntry> allConversations;
 
-   
     public void Interact()
     {
-    
         PlayConversation(defaultConversationID);
     }
 
-  
     public void PlayConversation(string id)
     {
         Question questionToPlay = GetQuestionByID(id);
         
-        Debug.Log(questionToPlay);
         if (questionToPlay != null)
         {
-            ConversationManager.Instance.StartConversation(questionToPlay);
+            ConversationManager.Instance.StartConversation(questionToPlay, transform);
         }
         else
         {
@@ -44,7 +40,6 @@ public class DialogueNPC : MonoBehaviour
         return null;
     }
     
-    // Helper to change the default conversation easily
     public void SetActiveConversation(string newID)
     {
         defaultConversationID = newID;

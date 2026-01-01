@@ -16,8 +16,8 @@ MonoBehaviour:
   sprite: {fileID: 0}
   questionText: Oh new face what's your name boy
   choices:
-  - text: 'my name is Finn i came here to learn more about my father '
-    nextDialogue: {fileID: 0}
+  - text: 
+    nextDialogue: {fileID: 11400000, guid: a5255c20331ca8a49a6b59cecb6b54ad, type: 2}
     choiceAudio: {fileID: 0}
   audioClip: {fileID: 0}
   rect:
