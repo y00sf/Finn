@@ -14,14 +14,14 @@ public struct DialogueEntry
 }
 public class ConversationManager : MonoBehaviour
 {
-  public static ConversationManager Instance { get; private set; }
+ public static ConversationManager Instance { get; private set; }
 
     [Header("Dependencies")]
     [SerializeField] private DialogueUI dialogueUI;
     [SerializeField] private GameObject dialogueCanvas;
 
     [Header("Settings")]
-    public float autoAdvanceDelay = 3.0f;
+    public float autoAdvanceDelay = 2.0f; 
 
     [Header("Conversations")]
     public List<DialogueEntry> conversation;
@@ -38,14 +38,13 @@ public class ConversationManager : MonoBehaviour
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
+
     public void StartConversation(Question startingQuestion, Transform npcSpeaker)
     {
         if (startingQuestion == null) return;
-
         currentQuestion = startingQuestion;
         
         if (dialogueUI != null) dialogueUI.SetCurrentNPC(npcSpeaker);
-
         if (dialogueCanvas != null) dialogueCanvas.SetActive(true);
 
         OnConversationStart?.Invoke();
@@ -55,7 +54,6 @@ public class ConversationManager : MonoBehaviour
     private void EndConversation()
     {
         if (dialogueCanvas != null) dialogueCanvas.SetActive(false);
-        
         if (autoAdvanceCoroutine != null) StopCoroutine(autoAdvanceCoroutine);
         
         currentQuestion = null;
@@ -73,10 +71,21 @@ public class ConversationManager : MonoBehaviour
         }
     }
 
+   
     private IEnumerator WaitAndAutoAdvance()
     {
+       
+        yield return null; 
+
+        
+        while (dialogueUI != null && dialogueUI.IsAnyBubbleTyping)
+        {
+            yield return null;
+        }
+        
         yield return new WaitForSeconds(autoAdvanceDelay);
 
+        
         if (currentQuestion.choices != null && currentQuestion.choices.Count > 0)
         {
             AdvanceConversation(0);
