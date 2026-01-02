@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Terrain Mat
+  m_Shader: {fileID: -6465566751694194690, guid: 0b819b825ecc9b04a8cc770ff0c9ebf2, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 2
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Fall:
+        m_Texture: {fileID: 2800000, guid: 8bd378b9e996f91479aad889a80e5fe3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Ground:
+        m_Texture: {fileID: 2800000, guid: 84b94284cfe9fed4cbadca85ba475410, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_4791c4738ab549da9a6668edc42794b6_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 549ad522c7a4b4646ab94e6f4ee41972, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_6b72269a168b4e3da8110e50abee9edf_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 8bd378b9e996f91479aad889a80e5fe3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_82239380e2b64d32a34893d170ed5dec_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 2c3e05417ecd6c248bbc55208917654c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Stones_Tex:
+        m_Texture: {fileID: 2800000, guid: 3e747ebd013119244bdd8a612922f34e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Tex_Flat:
+        m_Texture: {fileID: 2800000, guid: 7fe11970eb7253f4bbf8ce57addf5c33, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Tex_Steep:
+        m_Texture: {fileID: 2800000, guid: 474c3ec00253e664a847467644ea5f2a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _HeightEnd: 0
+    - _HeightStart: 0.54
+    - _Hight: 1
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _SlopeEnd: 0
+    - _SlopeStart: 0.17
+    - _StonesEnd: -2.63
+    - _StonesStart: 2.65
+    - _Stones_Shadow: 0.1
+    - _Stones_Shape: 1.7
+    - _Stones_Size: 27.5
+    - _Tiling: 3.71
+    m_Colors:
+    - _Flat_Tiling: {r: 40, g: 11.91, b: 0, a: 0}
+    - _Steep_Tiling: {r: 8, g: 4, b: 0, a: 0}
+    - _Stones_Tiling: {r: 46.43, g: 50, b: 0, a: 0}
+    - _Tex_Flat_Color: {r: 1, g: 1, b: 1, a: 0}
+    - _Tex_Steep_Color: {r: 1, g: 0.7824771, b: 0.6933962, a: 0}
+    - _Tiling: {r: 20, g: 10, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
+--- !u!114 &6399327279118508908
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 9
