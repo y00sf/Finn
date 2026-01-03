@@ -26,7 +26,7 @@ public class FishingSpotManager : MonoBehaviour
 
     public void SpawnRandomSpot()
     {
-        StartCoroutine(S)
+        StartCoroutine(SpawnRandomSpotCoroutine());
     }
 
     private IEnumerator SpawnRandomSpotCoroutine()
@@ -35,7 +35,7 @@ public class FishingSpotManager : MonoBehaviour
         if (spawnZones.Length == 0 || fishingSpotPrefab == null)
         {
             Debug.LogWarning("Missing Spawn Zones or Prefab in FishingSpotManager");
-            return;
+            yield break;
         }
         
         int randomIndex = Random.Range(0, spawnZones.Length);
