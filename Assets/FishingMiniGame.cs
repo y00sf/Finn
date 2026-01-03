@@ -10,12 +10,16 @@ public class FishingMiniGame : MonoBehaviour
     [SerializeField] private RectTransform Target;
     [SerializeField] private TextMeshProUGUI counterText;
     [SerializeField] private TextMeshProUGUI healthText;
+    [SerializeField] private TextMeshProUGUI NotifecationText;
     [Header("Game Setttigns")]
     [SerializeField] private float speed = 200f;
     [SerializeField] private float speedIncrease = 50f;
-    [SerializeField] private int counterCount;
+    [SerializeField] private int counterCount = 10;
     [SerializeField] private float hitTolerance = 25f;
     [SerializeField] private int health = 3;
+    [SerializeField] private FishingSpotManager fishingSpotManager;
+
+    private FishingSpot currentFishingSpot;
     
     
     private float currentSpeed;
@@ -28,6 +32,7 @@ public class FishingMiniGame : MonoBehaviour
     {
         UpdateUI();
         ChangeTargetRot();
+        
     }
 
     // Update is called once per frame
@@ -52,8 +57,9 @@ public class FishingMiniGame : MonoBehaviour
     }
 
 
-    public void StartFishing()
+    public void StartFishing(FishingSpot spot)
     {
+        currentFishingSpot = spot;
         ResetGameValues();
         
         if (gamePanel != null)
@@ -154,12 +160,21 @@ public class FishingMiniGame : MonoBehaviour
 
         if (playerWon)
         {
+            NotifecationText.text = "Fish caught";
+            fishingSpotManager.SpawnRandomSpot();
             Debug.Log("FISH CAUGHT!");
             
         }
         else
         {
-            Debug.Log("FISH ESCAPED!");
+            fishingSpotManager.SpawnRandomSpot();
+            NotifecationText.text = "Fish escaped";
+        }
+        
+        if (currentFishingSpot != null)
+        {
+            currentFishingSpot.DistroyFishingSpot();
+            currentFishingSpot = null; 
         }
     }
 }

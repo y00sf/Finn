@@ -7,12 +7,16 @@ public class FishingSpot : MonoBehaviour
     public bool isAvailable = true;
     
     public float interactionDistance = 20f;
-    
+    [SerializeField] private FishingMiniGame miniGameManager;
     public UnityEvent OnMiniGameStart;
+    
 
     private void Start()
     {
-       
+        if (miniGameManager == null)
+        {
+            miniGameManager = FindObjectOfType<FishingMiniGame>();
+        }
     }
 
     
@@ -47,17 +51,26 @@ public class FishingSpot : MonoBehaviour
         isAvailable = false;
         
         OnMiniGameStart.Invoke();
+        
+        if (miniGameManager != null)
+        {
+            miniGameManager.StartFishing(this);
+        }
+        else
+        {
+            Debug.LogError("FishingMiniGame Manager not found in scene!");
+        }
     }
-
-   
-
-
-    
-
    
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, interactionDistance);
+    }
+
+    public void DistroyFishingSpot()
+    {
+        Debug.Log("Destroying Fishing Spot");
+        Destroy(gameObject);
     }
 }
