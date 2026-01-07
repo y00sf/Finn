@@ -1012,14 +1012,14 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 134972874}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0.9998601, w: -0.016726373}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1750971791}
   m_Father: {fileID: 251887837}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -181.917}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -68, y: 32.07187}
@@ -1512,6 +1512,7 @@ MonoBehaviour:
   - {fileID: 271000148}
   - {fileID: 1167839175}
   - {fileID: 1516095140}
+  waitTime: 3
 --- !u!1001 &316681772
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2374,7 +2375,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 59538719790905309, guid: ae65be727c821d14a802e3cf8ce02636, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1344773328338742796, guid: ae65be727c821d14a802e3cf8ce02636, type: 3}
       propertyPath: m_IsActive
@@ -2460,6 +2461,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2531312524615445989, guid: ae65be727c821d14a802e3cf8ce02636, type: 3}
+      propertyPath: m_FillClockwise
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3655186650752450853, guid: ae65be727c821d14a802e3cf8ce02636, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -2476,6 +2481,10 @@ PrefabInstance:
       propertyPath: pointer
       value: 
       objectReference: {fileID: 134972875}
+    - target: {fileID: 6140784428438527426, guid: ae65be727c821d14a802e3cf8ce02636, type: 3}
+      propertyPath: hitTolerance
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 6140784428438527426, guid: ae65be727c821d14a802e3cf8ce02636, type: 3}
       propertyPath: fishingSpotManager
       value: 
@@ -6888,13 +6897,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1750971790}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.25797603, w: 0.96615136}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 6.014379, y: 6.014379, z: 6.014379}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 134972875}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 29.9}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
