@@ -6,6 +6,7 @@ public class FishingSpotManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private GameObject fishingSpotPrefab;
     [SerializeField] private int maxSpots = 3; 
+    [SerializeField] public int CurrentSpots = 1;
     
     [Header("Spawn Areas")]
     [SerializeField] private BoxCollider[] spawnZones;
@@ -26,7 +27,14 @@ public class FishingSpotManager : MonoBehaviour
 
     public void SpawnRandomSpot()
     {
-        StartCoroutine(SpawnRandomSpotCoroutine());
+        if (CurrentSpots <= maxSpots)
+        {
+            StartCoroutine(SpawnRandomSpotCoroutine());
+        }
+        else
+        {
+            Debug.Log("Max spots reached");
+        }
     }
 
     private IEnumerator SpawnRandomSpotCoroutine()
@@ -44,6 +52,7 @@ public class FishingSpotManager : MonoBehaviour
         Vector3 randomPosition = GetRandomPointInBounds(selectedZone.bounds);
         
         Instantiate(fishingSpotPrefab, randomPosition, selectedZone.transform.rotation);
+        CurrentSpots++;
         
         Debug.Log($"Spawned Fishing Spot in Zone {randomIndex}");
     }

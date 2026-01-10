@@ -23,11 +23,7 @@ public class FishingSpot : MonoBehaviour
     public void Interact(Transform playerTransform)
     {
      
-        if (!isAvailable)
-        {
-            Debug.Log("Unavailable fishing spot");
-            return;
-        }
+       
 
        
         if (interactionDistance > 0)
@@ -40,7 +36,7 @@ public class FishingSpot : MonoBehaviour
             }
         }
 
-        // 3. Trigger the Fishing Mechanics
+        
         StartFishingSequence();
     }
 
@@ -48,7 +44,7 @@ public class FishingSpot : MonoBehaviour
     {
         Debug.Log($"Fishing started");
         
-        isAvailable = false;
+        
         
         OnMiniGameStart.Invoke();
         
