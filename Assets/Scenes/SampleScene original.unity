@@ -2375,7 +2375,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 59538719790905309, guid: ae65be727c821d14a802e3cf8ce02636, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1344773328338742796, guid: ae65be727c821d14a802e3cf8ce02636, type: 3}
       propertyPath: m_IsActive
@@ -2477,6 +2477,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5367895526522731463, guid: ae65be727c821d14a802e3cf8ce02636, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 5367895526522731463, guid: ae65be727c821d14a802e3cf8ce02636, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 6140784428438527426, guid: ae65be727c821d14a802e3cf8ce02636, type: 3}
       propertyPath: pointer
       value: 
