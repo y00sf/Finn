@@ -7,12 +7,16 @@ public class FishingSpot : MonoBehaviour
     public bool isAvailable = true;
     
     public float interactionDistance = 20f;
-    public FishingMiniGame miniGameManager;
+    [SerializeField] private FishingMiniGame miniGameManager;
+    public UnityEvent OnMiniGameStart;
     
 
     private void Start()
     {
-        miniGameManager = FindAnyObjectByType<FishingMiniGame>();
+        if (miniGameManager == null)
+        {
+            miniGameManager = FindObjectOfType<FishingMiniGame>();
+        }
     }
 
     
@@ -46,7 +50,7 @@ public class FishingSpot : MonoBehaviour
         
         isAvailable = false;
         
-        miniGameManager.StartFishing(this);
+        OnMiniGameStart.Invoke();
         
         if (miniGameManager != null)
         {

@@ -173,7 +173,6 @@ public class FishingMiniGame : MonoBehaviour
         
         if (currentFishingSpot != null)
         {
-            fishingSpotManager.currentSpots--;
             currentFishingSpot.DistroyFishingSpot();
             currentFishingSpot = null; 
         }
