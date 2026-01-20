@@ -1,26 +1,74 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class DialogueEntry
+{
+    public string conversationID;
+    public DialogueData dialogue;
+}
+
+
 public class DialogueNPC : MonoBehaviour
 {
     [Header("Conversation Settings")]
-    public string defaultConversationID;
+    public string defaultConversationID = "greeting";
 
     [Header("Conversation Registry")]
-    public List<DialogueEntry> allConversations;
+    public List<DialogueEntry> allConversations = new List<DialogueEntry>();
 
-    public void Interact()
+    [Header("Optional Settings")]
+    [Tooltip("If true, automatically switches to return conversation after first meeting")]
+    public bool useReturnConversation = false;
+    public string returnConversationID = "return_greeting";
+    private string flagKey;
+
+    private void Start()
     {
-        PlayConversation(defaultConversationID);
+        flagKey = $"met_{gameObject.name}";
     }
 
+    
+    public void Interact()
+    {
+        if (useReturnConversation)
+        {
+            bool hasMet = GameFlags.Instance.GetFlag(flagKey);
+            string conversationToPlay = hasMet ? returnConversationID : defaultConversationID;
+            PlayConversation(conversationToPlay);
+            
+            if (!hasMet)
+            {
+                GameFlags.Instance.SetFlag(flagKey, true);
+            }
+        }
+        else
+        {
+            PlayConversation(defaultConversationID);
+        }
+    }
+    
     public void PlayConversation(string id)
     {
-        Question questionToPlay = GetQuestionByID(id);
+        DialogueData dialogueToPlay = GetDialogueByID(id);
         
-        if (questionToPlay != null)
+        if (dialogueToPlay != null)
         {
-            ConversationManager.Instance.StartConversation(questionToPlay, transform);
+            DialogueUI ui = FindObjectOfType<DialogueUI>();
+            if (ui != null)
+            {
+                ui.SetCurrentNPC(transform);
+            }
+
+          
+            if (ConversationManager.Instance != null)
+            {
+                ConversationManager.Instance.StartDialogue(dialogueToPlay);
+            }
+            else
+            {
+                Debug.LogError($"DialogueRunner not found! Cannot play conversation '{id}'");
+            }
         }
         else
         {
@@ -28,20 +76,40 @@ public class DialogueNPC : MonoBehaviour
         }
     }
 
-    private Question GetQuestionByID(string id)
+   
+    private DialogueData GetDialogueByID(string id)
     {
         foreach (var entry in allConversations)
         {
             if (entry.conversationID == id)
             {
-                return entry.question;
+                return entry.dialogue;
             }
         }
         return null;
     }
     
+   
     public void SetActiveConversation(string newID)
     {
         defaultConversationID = newID;
+        Debug.Log($"NPC '{gameObject.name}' default conversation changed to: {newID}");
     }
+
+  
+    public bool HasConversation(string id)
+    {
+        return GetDialogueByID(id) != null;
+    }
+
+   
+    public void ResetMetFlag()
+    {
+        if (!string.IsNullOrEmpty(flagKey))
+        {
+            GameFlags.Instance.SetFlag(flagKey, false);
+            Debug.Log($"Reset 'met' flag for {gameObject.name}");
+        }
+    }
+    
 }

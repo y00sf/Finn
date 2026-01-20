@@ -1,76 +1,117 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class FishingSpot : MonoBehaviour
 {
-    
-    public bool isAvailable = true;
-    
-    public float interactionDistance = 20f;
-    [SerializeField] private FishingMiniGame miniGameManager;
-    public UnityEvent OnMiniGameStart;
-    
+    [SerializeField] private float flightTime = 1.5f;
+    [SerializeField] private float arcHeight = 5.0f;
+    [SerializeField] private float biomeDetectionRadius = 1f;
+    [SerializeField] private LayerMask waterLayer;
+
+    [Header("References")]
+    [SerializeField] private FishingManager fishingManager;
+
+    public UnityEvent OnLanded;
 
     private void Start()
     {
-        if (miniGameManager == null)
+        if (fishingManager == null)
         {
-            miniGameManager = FindObjectOfType<FishingMiniGame>();
+            fishingManager = FindObjectOfType<FishingManager>();
         }
     }
+
+    public void FlyToTarget(Vector3 targetPos)
+    {
+        StartCoroutine(MoveRoutine(targetPos));
+    }
+
+    private IEnumerator MoveRoutine(Vector3 destination)
+    {
+        Vector3 startPos = transform.position;
+        float elapsed = 0f;
+
+        while (elapsed < flightTime)
+        {
+            elapsed += Time.deltaTime;
+            float percent = elapsed / flightTime;
+
+            Vector3 currentPos = Vector3.Lerp(startPos, destination, percent);
+            float height = Mathf.Sin(percent * Mathf.PI) * arcHeight;
+            currentPos.y += height;
+
+            transform.position = currentPos;
+            yield return null;
+        }
+
+        transform.position = destination;
 
     
-    public void Interact(Transform playerTransform)
-    {
-     
-        if (!isAvailable)
-        {
-            Debug.Log("Unavailable fishing spot");
-            return;
-        }
+        DetectBiome();
 
-       
-        if (interactionDistance > 0)
-        {
-            float distance = Vector3.Distance(transform.position, playerTransform.position);
-            if (distance > interactionDistance)
-            {
-                Debug.Log("too far");
-                return;
-            }
-        }
+      
+        OnLanded?.Invoke();
 
-        // 3. Trigger the Fishing Mechanics
-        StartFishingSequence();
+      
+        if (fishingManager != null)
+        {
+           // fishingManager.OnBaitLanded();
+        }
     }
 
-    private void StartFishingSequence()
+    private void DetectBiome()
     {
-        Debug.Log($"Fishing started");
-        
-        isAvailable = false;
-        
-        OnMiniGameStart.Invoke();
-        
-        if (miniGameManager != null)
+      
+        if (Physics.Raycast(transform.position + Vector3.up, Vector3.down, out RaycastHit hit, 10f, waterLayer))
         {
-            miniGameManager.StartFishing(this);
+            BiomeType detectedBiome = GetBiomeFromTag(hit.collider.tag);
+
+            if (fishingManager != null)
+            {
+                fishingManager.SetCurrentBiome(detectedBiome);
+            }
+
+            Debug.Log($"Bait landed in: {detectedBiome} (Tag: {hit.collider.tag})");
         }
         else
         {
-            Debug.LogError("FishingMiniGame Manager not found in scene!");
+            
+            Collider[] colliders = Physics.OverlapSphere(transform.position, biomeDetectionRadius, waterLayer);
+
+            if (colliders.Length > 0)
+            {
+                BiomeType detectedBiome = GetBiomeFromTag(colliders[0].tag);
+
+                if (fishingManager != null)
+                {
+                    fishingManager.SetCurrentBiome(detectedBiome);
+                }
+
+                Debug.Log($"Bait landed in: {detectedBiome} (Tag: {colliders[0].tag})");
+            }
+            else
+            {
+                Debug.LogWarning("Could not detect biome - no water found!");
+            }
         }
     }
-   
+
+ 
+    private BiomeType GetBiomeFromTag(string tag)
+    {
+        return tag switch
+        {
+            "IceWater" => BiomeType.IceBiome,
+            "VolcanoWater" => BiomeType.VolcanoBiome,
+            "WildeWater" => BiomeType.WiledBiome,
+            _ => BiomeType.WiledBiome // Default fallback
+        };
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, interactionDistance);
-    }
-
-    public void DistroyFishingSpot()
-    {
-        Debug.Log("Destroying Fishing Spot");
-        Destroy(gameObject);
+        Gizmos.DrawWireSphere(transform.position, biomeDetectionRadius);
     }
 }

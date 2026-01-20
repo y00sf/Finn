@@ -7,6 +7,7 @@ public class FishingSpotManager : MonoBehaviour
     [SerializeField] private GameObject fishingSpotPrefab;
     [SerializeField] private int maxSpots = 3; 
     
+    
     [Header("Spawn Areas")]
     [SerializeField] private BoxCollider[] spawnZones;
     

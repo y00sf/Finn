@@ -2,80 +2,70 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-public class ButtonMashing : MonoBehaviour
+public class ButtonMashing : MiniGameBase
 {
+    [Header("Mashing Settings")]
     [SerializeField] private Slider slider;
     [SerializeField] private Image fillImage;
     [SerializeField] private Gradient colorGradient;
     
-    public InputAction mashAction;
+  
+    public InputAction mashAction; 
+    
     [SerializeField] private float increaseAmount = 10f;
     [SerializeField] private float decaySpeed = 25f;
-    
-    public bool isGameActive = true;
-    public UnityEvent OnWin;
 
-    private bool hasWon = false;
-
-    void Start()
+    protected override void OnStart()
     {
+        slider.minValue = 0;
+        slider.maxValue = 100;
         slider.value = 50;
-        hasWon = false;
+        mashAction.Enable();
+        mashAction.performed += OnMash;
+        
         UpdateColor();
+    }
+
+    protected override void OnCleanup()
+    {
+        mashAction.Disable();
+        mashAction.performed -= OnMash;
+    }
+
+    private void OnMash(InputAction.CallbackContext context)
+    {
+        if (_isRunning) 
+        {
+            IncreaseSlider();
+        }
     }
 
     void Update()
     {
-       
-        if (UnityEngine.InputSystem.Keyboard.current != null && 
-            UnityEngine.InputSystem.Keyboard.current.eKey.wasPressedThisFrame)
-        {
-            Debug.Log("KEYBOARD 'E' DETECTED!"); 
-            IncreaseSlider();
-        }
-
-       
-        if (UnityEngine.InputSystem.Gamepad.current != null && 
-            UnityEngine.InputSystem.Gamepad.current.buttonSouth.wasPressedThisFrame)
-        {
-            Debug.Log("GAMEPAD 'A/X' DETECTED!");
-            IncreaseSlider();
-        }
-        
+        if (!_isRunning) return;
+        CheckConditions();
         DecreaseSlider();
         UpdateColor();
-        CheckWinCondition();
+        
     }
 
-    private void IncreaseSlider()
-    {
-        slider.value += increaseAmount;
-    }
-
-    private void DecreaseSlider()
-    {
-        slider.value -= decaySpeed * Time.deltaTime;
-    }
+    private void IncreaseSlider() => slider.value += increaseAmount;
+    private void DecreaseSlider() => slider.value -= decaySpeed * Time.deltaTime;
 
     private void UpdateColor()
     {
-        if (fillImage != null)
-        {
-            fillImage.color = colorGradient.Evaluate(slider.normalizedValue);
-        }
+        if (fillImage != null) fillImage.color = colorGradient.Evaluate(slider.normalizedValue);
     }
 
-    private void CheckWinCondition()
+    private void CheckConditions()
     {
         if (slider.value >= slider.maxValue)
         {
-            WinGame();
+            EndGame(true);
         }
-    }
-
-    private void WinGame()
-    {
-        hasWon = true;
-        OnWin?.Invoke();
+        else if (slider.value <= slider.minValue)
+        {
+            EndGame(false);
+        }
     }
 }

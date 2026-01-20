@@ -1,94 +1,95 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class FishingMiniGame : MonoBehaviour
+
+public class FishingMiniGame : MiniGameBase
 {
-    
-    [SerializeField] private GameObject gamePanel;
     [Header("UI Elements")]
+    [SerializeField] private GameObject gamePanel;
     [SerializeField] private RectTransform pointer;
     [SerializeField] private RectTransform Target;
     [SerializeField] private TextMeshProUGUI counterText;
     [SerializeField] private TextMeshProUGUI healthText;
-    [SerializeField] private TextMeshProUGUI NotifecationText;
-    [Header("Game Setttigns")]
+
+    [Header("Input")]
+    [SerializeField] private InputAction clickAction;
+
+    [Header("Game Settings")]
     [SerializeField] private float speed = 200f;
     [SerializeField] private float speedIncrease = 50f;
     [SerializeField] private int counterCount = 10;
     [SerializeField] private float hitTolerance = 25f;
     [SerializeField] private int health = 3;
-    [SerializeField] private FishingSpotManager fishingSpotManager;
 
-    private FishingSpot currentFishingSpot;
-    
-    
     private float currentSpeed;
     private int currentCounter;
     private int currentHealth;
     private bool isClockwise = true;
-    private bool isActive;
-    
-    void Start()
+
+    private void Update()
     {
-        UpdateUI();
-        ChangeTargetRot();
-        
+        if (!_isRunning) return;
+
+        float directionMultiplier = isClockwise ? -1f : 1f;
+        pointer.Rotate(Vector3.forward * directionMultiplier * currentSpeed * Time.deltaTime);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnClick(InputAction.CallbackContext context)
     {
-
-        if (!isActive)
-        {
-;         return;
-        }
-       
-        float directionMultiplier = isClockwise ? -1f : 1f;
-        
-       
-        pointer.Rotate(Vector3.forward * directionMultiplier * currentSpeed * Time.deltaTime);
-
-       
-        if (Input.GetMouseButtonDown(0)) 
+        if (_isRunning)
         {
             CheckHit();
         }
     }
 
-
-    public void StartFishing(FishingSpot spot)
+    protected override void OnStart()
     {
-        currentFishingSpot = spot;
         ResetGameValues();
-        
+
         if (gamePanel != null)
             gamePanel.SetActive(true);
-            
-        isActive = true;
-        
+
+       
+        if (clickAction != null)
+        {
+            clickAction.Enable();
+            clickAction.performed += OnClick;
+        }
+
         ChangeTargetRot();
         UpdateUI();
     }
+
+    protected override void OnCleanup()
+    {
     
+        if (clickAction != null)
+        {
+            clickAction.performed -= OnClick;
+            clickAction.Disable();
+        }
+
+        if (gamePanel != null)
+            gamePanel.SetActive(false);
+    }
+
     private void ResetGameValues()
     {
         currentSpeed = speed;
         currentCounter = counterCount;
         currentHealth = health;
         isClockwise = true;
-        pointer.rotation = Quaternion.identity; 
+        pointer.rotation = Quaternion.identity;
     }
 
-    void CheckHit()
+    private void CheckHit()
     {
         float pointerAngle = pointer.eulerAngles.z;
         float targetAngle = Target.eulerAngles.z;
 
-    
         float angleDifference = Mathf.DeltaAngle(pointerAngle, targetAngle);
 
-        
         if (Mathf.Abs(angleDifference) <= hitTolerance)
         {
             OnSuccess();
@@ -113,10 +114,7 @@ public class FishingMiniGame : MonoBehaviour
 
     private void ChangeTargetRot()
     {
-        
         float randomAngle = Random.Range(0f, 360f);
-        
-       
         Target.rotation = Quaternion.Euler(0, 0, randomAngle);
     }
 
@@ -127,6 +125,7 @@ public class FishingMiniGame : MonoBehaviour
 
         if (currentHealth <= 0)
         {
+           
             EndGame(false);
         }
     }
@@ -138,43 +137,14 @@ public class FishingMiniGame : MonoBehaviour
 
         if (currentCounter <= 0)
         {
+           
             EndGame(true);
             return;
         }
+
         isClockwise = !isClockwise;
         currentSpeed += speedIncrease;
-        
+
         ChangeTargetRot();
-    }
-    
-    
-    private void EndGame(bool playerWon)
-    {
-        isActive = false;
-
-        if (gamePanel != null)
-        {
-            gamePanel.SetActive(false);
-        }
-          
-
-        if (playerWon)
-        {
-            NotifecationText.text = "Fish caught";
-            fishingSpotManager.SpawnRandomSpot();
-            Debug.Log("FISH CAUGHT!");
-            
-        }
-        else
-        {
-            fishingSpotManager.SpawnRandomSpot();
-            NotifecationText.text = "Fish escaped";
-        }
-        
-        if (currentFishingSpot != null)
-        {
-            currentFishingSpot.DistroyFishingSpot();
-            currentFishingSpot = null; 
-        }
     }
 }

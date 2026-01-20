@@ -4,48 +4,61 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-public class ReactionTime : MonoBehaviour
+public class ReactionTime : MiniGameBase
 {
+  [Header("Reaction Settings")]
     [SerializeField] private GameObject circlePrefab; 
     [SerializeField] private RectTransform spawnArea; 
     [SerializeField] private float spawnRate = 1.0f;
-    [SerializeField] private int maxSpwanCount = 3;
-    [SerializeField] private int currentSpawnCount = 0;
-    public bool isGameActive = true;
-    public UnityEvent OnWin;
-    private bool hasWon = false;
+    [SerializeField] private int targetHitCount = 5; // Goal to win
     
     public InputAction hitAction; 
 
     private List<Circle> activeCircles = new List<Circle>();
     private float nextSpawnTime;
+    private int hitsRegistered = 0;
 
-    private void OnEnable() => hitAction.Enable();
-    private void OnDisable() => hitAction.Disable();
-
-
-    void Start()
+    protected override void OnStart()
     {
-        currentSpawnCount = 0;
+        hitsRegistered = 0;
+        activeCircles.Clear();
+        
+        foreach(Transform t in spawnArea) Destroy(t.gameObject);
+        
+        hitAction.Enable();
+        hitAction.performed += OnClick;
     }
+
+    protected override void OnCleanup()
+    {
+        hitAction.Disable();
+        hitAction.performed -= OnClick;
+        activeCircles.Clear();
+    }
+
     void Update()
     {
+        if (!_isRunning) return;
+
         if (Time.time >= nextSpawnTime)
         {
-            if (currentSpawnCount < maxSpwanCount)
-            {
-                SpawnCircleUI();
-                nextSpawnTime = Time.time + spawnRate;
-            }
-            
+            SpawnCircleUI();
+            nextSpawnTime = Time.time + spawnRate;
         }
 
-        if (hitAction.WasPerformedThisFrame())
-        {
-            CheckForHits();
-        }
-
+        
         activeCircles.RemoveAll(x => x == null);
+        
+        
+        if (hitsRegistered >= targetHitCount)
+        {
+            EndGame(true);
+        }
+    }
+
+    private void OnClick(InputAction.CallbackContext ctx)
+    {
+        CheckForHits();
     }
 
     private void SpawnCircleUI()
@@ -53,25 +66,32 @@ public class ReactionTime : MonoBehaviour
         if (spawnArea == null) return;
 
         GameObject obj = Instantiate(circlePrefab, spawnArea);
+        RectTransform circleRect = obj.GetComponent<RectTransform>();
         
+     
         float width = spawnArea.rect.width;
         float height = spawnArea.rect.height;
-
-        float randomX = Random.Range(-width / 2f, width / 2f);
-        float randomY = Random.Range(-height / 2f, height / 2f);
-
-        RectTransform circleRect = obj.GetComponent<RectTransform>();
-        circleRect.anchoredPosition = new Vector2(randomX, randomY);
-        circleRect.localScale = Vector3.one;
-        currentSpawnCount++;
-        activeCircles.Add(obj.GetComponent<Circle>());
+        circleRect.anchoredPosition = new Vector2(
+            Random.Range(-width / 2f, width / 2f), 
+            Random.Range(-height / 2f, height / 2f)
+        );
+        
+        Circle c = obj.GetComponent<Circle>();
+        activeCircles.Add(c);
+        
+     
     }
 
     private void CheckForHits()
     {
-        foreach (var circle in activeCircles)
+      
+        for (int i = activeCircles.Count - 1; i >= 0; i--)
         {
-            if (circle.CheckHit()) break; 
+            if (activeCircles[i].CheckHit()) 
+            {
+                hitsRegistered++;
+                break; 
+            }
         }
     }
 }

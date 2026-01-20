@@ -1,77 +1,139 @@
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
-
-public class DialogueUI : MonoBehaviour
-{
-   [Header("Position Settings")]
-    public float heightOffset = 2.5f;
-    public Transform playerTransform;
-
-    [Header("Bubble References")]
-    [SerializeField] private DynamicChatBubble npcBubble;
-    [SerializeField] private DynamicChatBubble playerBubble;
-
-    [Header("Shared References")]
-    public Button[] dialogueButtons;
-
-    private Transform currentNpcTransform;
-
+using System;
+    using System.Collections;
+    using TMPro;
+    using UnityEngine;
     
-    public bool IsAnyBubbleTyping
+    public class DialogueUI : MonoBehaviour
     {
-        get
+        public float npcHeightOffset = 2.5f;
+        public float playerHeightOffset = 2.5f;
+        public Transform playerTransform;
+    
+        [SerializeField] private WorldSpaceBubble npcBubble;
+        [SerializeField] private WorldSpaceBubble playerBubble;
+    
+        [SerializeField] private bool waitForTypingToFinish = true;
+        [SerializeField] private float autoHideDelay = 0.5f;
+    
+        public event Action OnContinueClicked;
+    
+        private Transform currentNpcTransform;
+        private Coroutine autoHideCoroutine;
+    
+        public bool IsTyping
         {
-            if (npcBubble != null && npcBubble.gameObject.activeSelf && npcBubble.IsTyping) return true;
-            if (playerBubble != null && playerBubble.gameObject.activeSelf && playerBubble.IsTyping) return true;
-            return false;
+            get
+            {
+                bool npcTyping = npcBubble != null && npcBubble.gameObject.activeSelf && npcBubble.IsTyping;
+                bool playerTyping = playerBubble != null && playerBubble.gameObject.activeSelf && playerBubble.IsTyping;
+                return npcTyping || playerTyping;
+            }
+        }
+    
+        private void Start()
+        {
+            if (playerTransform == null)
+            {
+                GameObject player = GameObject.FindGameObjectWithTag("Player");
+                if (player != null)
+                {
+                    playerTransform = player.transform;
+                }
+            }
+    
+            Hide();
+        }
+    
+        public void SetCurrentNPC(Transform npc)
+        {
+            currentNpcTransform = npc;
+    
+            if (npcBubble != null)
+            {
+                npcBubble.targetNPC = npc;
+                npcBubble.offset = Vector3.up * npcHeightOffset;
+            }
+        }
+    
+        public void ShowLine(string text, string speakerName = "")
+        {
+            if (autoHideCoroutine != null)
+            {
+                StopCoroutine(autoHideCoroutine);
+                autoHideCoroutine = null;
+            }
+    
+            bool isPlayer = !string.IsNullOrEmpty(speakerName) &&
+                           speakerName.Equals("Player", StringComparison.OrdinalIgnoreCase);
+    
+            if (isPlayer)
+            {
+                ShowPlayerBubble(text);
+            }
+            else
+            {
+                ShowNPCBubble(text);
+            }
+    
+            if (waitForTypingToFinish)
+            {
+                StartCoroutine(WaitForTypingThenNotify());
+            }
+        }
+    
+        private void ShowNPCBubble(string text)
+        {
+            if (playerBubble != null)
+            {
+                playerBubble.HideDialogue();
+            }
+    
+            if (npcBubble != null && currentNpcTransform != null)
+            {
+                npcBubble.ShowDialogue(currentNpcTransform, text);
+            }
+        }
+    
+        private void ShowPlayerBubble(string text)
+        {
+            if (npcBubble != null)
+            {
+                npcBubble.HideDialogue();
+            }
+    
+            if (playerBubble != null && playerTransform != null)
+            {
+                if (playerBubble.targetNPC != playerTransform)
+                {
+                    playerBubble.targetNPC = playerTransform;
+                    playerBubble.offset = Vector3.up * playerHeightOffset;
+                }
+                playerBubble.ShowDialogue(playerTransform, text);
+            }
+        }
+    
+        private IEnumerator WaitForTypingThenNotify()
+        {
+            while (IsTyping)
+            {
+                yield return null;
+            }
+    
+            yield return new WaitForSeconds(autoHideDelay);
+    
+            OnContinueClicked?.Invoke();
+        }
+    
+        public void Hide()
+        {
+            if (npcBubble != null)
+            {
+                npcBubble.HideDialogue();
+            }
+    
+            if (playerBubble != null)
+            {
+                playerBubble.HideDialogue();
+            }
         }
     }
-
-    public void SetCurrentNPC(Transform npc)
-    {
-        currentNpcTransform = npc;
-    }
-
-    public void DisplayDialogue(Question question)
-    {
-        if (question == null) return;
-
-        if (npcBubble != null) npcBubble.gameObject.SetActive(false);
-        if (playerBubble != null) playerBubble.gameObject.SetActive(false);
-        foreach (var btn in dialogueButtons) btn.gameObject.SetActive(false);
-
-        if (question.SpeakerName == "Player")
-        {
-            ShowPlayerDialogue(question.questionText);
-        }
-        else
-        {
-            ShowNPCDialogue(question.questionText);
-        }
-    }
-
-    private void ShowNPCDialogue(string text)
-    {
-        if (npcBubble != null)
-        {
-            if (currentNpcTransform != null)
-                npcBubble.transform.position = currentNpcTransform.position + Vector3.up * heightOffset;
-
-            npcBubble.gameObject.SetActive(true);
-            npcBubble.SetText(text);
-        }
-    }
-
-    private void ShowPlayerDialogue(string text)
-    {
-        if (playerBubble != null)
-        {
-            if (playerTransform != null)
-                playerBubble.transform.position = playerTransform.position + Vector3.up * heightOffset;
-
-            playerBubble.gameObject.SetActive(true);
-            playerBubble.SetText(text);
-        }
-    }
-}

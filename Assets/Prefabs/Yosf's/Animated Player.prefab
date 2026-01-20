@@ -1620,6 +1620,7 @@ GameObject:
   - component: {fileID: 1568501900587870126}
   - component: {fileID: 946025399331334368}
   - component: {fileID: 4710152526124520526}
+  - component: {fileID: 7796986012734960284}
   m_Layer: 0
   m_Name: Animated Player
   m_TagString: Untagged
@@ -1751,6 +1752,15 @@ MonoBehaviour:
   footstepInterval: 0.5
   pitchRange: {x: 0.9, y: 1.1}
   footstepVolume: 0.5
+  dustParticles: {fileID: 0}
+  maxDustEmissionRate: 8
+  minSpeedForDust: 0.5
+  footprintPrefab: {fileID: 3146646039117142006, guid: e457dd4536521674185dc84891de2dd2, type: 3}
+  leftFootBone: {fileID: 7341389627669444980}
+  rightFootBone: {fileID: 6075056324206707596}
+  decalGroundLayer:
+    serializedVersion: 2
+    m_Bits: 8
   animator: {fileID: 7903513084677840899}
 --- !u!114 &1568501900587870126
 MonoBehaviour:
@@ -1771,6 +1781,15 @@ MonoBehaviour:
   interactionUI: {fileID: 0}
   forwardBias: 0.3
   interactable: {fileID: 0}
+  PlayerInputActions:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 8f4bc48a-27a9-4e11-aa71-b076765c3925
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!114 &946025399331334368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1783,11 +1802,70 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4200dfbf8db07a0478c4a98da6554b77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
-  clickLayerMask:
+  baitPrefab: {fileID: 5957817928902686958, guid: 9340519ae7bf3634080f254c8e2e62ce, type: 3}
+  spawnPoint: {fileID: 5381880760127252319}
+  powerSlider: {fileID: 0}
+  fillImage: {fileID: 0}
+  colorGradient:
     serializedVersion: 2
-    m_Bits: 1
-  rayLength: 100
+    key0: {r: 1, g: 0, b: 0, a: 1}
+    key1: {r: 1, g: 0.35859805, b: 0, a: 1}
+    key2: {r: 0.06381965, g: 1, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 31129
+    ctime2: 65535
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 2
+    m_ColorSpace: -1
+    m_NumColorKeys: 3
+    m_NumAlphaKeys: 2
+  chargeSpeed: 100
+  maxCastDistance: 20
+  waterLayer:
+    serializedVersion: 2
+    m_Bits: 16
+  castAction:
+    m_Name: Cast
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 65ee0b7f-12b7-4fa1-bd82-c5486780a6de
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: eae41a0f-0e31-4d07-90b3-5054610c720a
+      m_Path: <Mouse>/leftButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Cast
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 76af3973-f1da-4161-879a-13d4908d41fb
+      m_Path: <Gamepad>/buttonSouth
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Cast
+      m_Flags: 0
+    m_Flags: 0
 --- !u!82 &4710152526124520526
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1885,6 +1963,84 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7796986012734960284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8173407782958523211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f769cf341a92da440a2be7c050653bfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  journalPanel: {fileID: 0}
+  inventoryPanel: {fileID: 0}
+  settingsPanel: {fileID: 0}
+  journalAction:
+    m_Name: Journal
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: dc5b6d5a-329d-4d2e-8d13-7ed0bc2b56f7
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: c52e266c-0568-4024-86cf-4cb8f46d76e1
+      m_Path: <Keyboard>/j
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Journal
+      m_Flags: 0
+    - m_Name: 
+      m_Id: b03f025b-1111-4c32-a38b-c2f74872b62f
+      m_Path: <Gamepad>/select
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Journal
+      m_Flags: 0
+    m_Flags: 0
+  inventoryAction:
+    m_Name: Inventory
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 38eaa2a1-780d-499f-be01-df25b97fbddd
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  settingsAction:
+    m_Name: Settings
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: a5475522-52cb-4c25-8e3b-24175271195c
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  escapeAction:
+    m_Name: Escape
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 7b1e6d26-26eb-4b9c-9e61-223c035550d6
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 55220a03-c30d-4168-98bf-aa066d110177
+      m_Path: <Keyboard>/escape
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Escape
+      m_Flags: 0
+    m_Flags: 0
+  fishingCaster: {fileID: 946025399331334368}
+  playerInput: {fileID: 2369928000539891134}
+  playerInteraction: {fileID: 1568501900587870126}
 --- !u!1 &8260778905026237690
 GameObject:
   m_ObjectHideFlags: 0

@@ -15,22 +15,10 @@ public class PlayerInteraction : MonoBehaviour
     //private PlayerInputActions inputActions;
     public BaseInteractable interactable;
     
+    public InputAction PlayerInputActions;
     
-    private void Awake()
-    {
-        //inputActions = new PlayerInputActions();
-    }
     
-    private void OnEnable()
-    {
-        //inputActions.Player.Enable();
-    }
-    
-    private void OnDisable()
-    {
-        //inputActions.Player.Disable();
-    }
-    
+  
     private void Update()
     {
         SphereCheck();
@@ -53,17 +41,14 @@ public class PlayerInteraction : MonoBehaviour
         {
             if (interactionUI != null) interactionUI.SetActive(false);
         }
-        /*
-        if (inputActions.Player.Interact.WasPressedThisFrame())
-        {
-            interactable?.Interact();
-        }
-        */
         
-        if(Input.GetKeyDown(KeyCode.E))
+        if (PlayerInputActions.WasPerformedThisFrame())
         {
             interactable?.Interact();
         }
+        
+        
+       
     }
     
     /*
