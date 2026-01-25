@@ -41,8 +41,8 @@ Material:
     - _Depth: 0.17
     - _DisplacementMax: 1
     - _DisplacementMin: 0.8
-    - _FoamDrag: 0.36
-    - _FoamStrong: 1.49
+    - _FoamDrag: 0.99
+    - _FoamStrong: 5.86
     - _Inner_Thickness: 4.08
     - _Noise_Details: 0.2
     - _Noise_Scale: 18.75
@@ -55,7 +55,7 @@ Material:
     - _WaveMax: 1.1
     - _WaveMin: 0.9
     - _WaveSpeed: 0.84
-    - _WaveStrong: 0.5
+    - _WaveStrong: 1
     m_Colors:
     - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
     - _test: {r: 1.97, g: 1, b: 1, a: 1}

@@ -10,27 +10,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: c3ffebcbb4e7031418a7aa68473c80bf, type: 3}
       propertyPath: m_LocalScale.x
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c3ffebcbb4e7031418a7aa68473c80bf, type: 3}
       propertyPath: m_LocalScale.y
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c3ffebcbb4e7031418a7aa68473c80bf, type: 3}
       propertyPath: m_LocalScale.z
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c3ffebcbb4e7031418a7aa68473c80bf, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 28.287941
+      value: 157.95
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c3ffebcbb4e7031418a7aa68473c80bf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 32.603046
+      value: 46.7
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c3ffebcbb4e7031418a7aa68473c80bf, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -27.550114
+      value: 171.39
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c3ffebcbb4e7031418a7aa68473c80bf, type: 3}
       propertyPath: m_LocalRotation.w
@@ -66,7 +66,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: bac45452cee228145bfeaffa2d4e6890, type: 2}
     - target: {fileID: 919132149155446097, guid: c3ffebcbb4e7031418a7aa68473c80bf, type: 3}
       propertyPath: m_Name
-      value: BigBush (8)
+      value: BigBush
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
