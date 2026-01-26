@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d186e25defee73b4caa4bb3c9ed512e6, type: 3}
+  m_Name: Nemo
+  m_EditorClassIdentifier: 
+  fishName: ClownFish
+  smallFishSprite: {fileID: 584284258, guid: 61df7992cfdfb6040a4a5a575f3f1a8a, type: 3}
+  largeFishSprite: {fileID: 1478593549, guid: 30b118c5428b69b49af37f07fc90987e, type: 3}
+  biomeType: 2
+  collected: 0
+  fishDescription: Legend says he lost his child...
+  fishWeight: 
+  fishLength: 

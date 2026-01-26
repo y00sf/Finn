@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 4a4be13bcccdee748b2348869e96efa9
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 159169
+  packageName: Modular Motion
+  packageVersion: 2.0
+  assetPath: Assets/ModularMotion/ModularMotion.xml
+  uploadId: 565545

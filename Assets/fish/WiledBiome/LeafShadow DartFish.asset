@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: LeafShadow DartFish
   m_EditorClassIdentifier: 
   fishName: Leafshadow Dartfish
-  icon: {fileID: 0}
+  smallFishSprite: {fileID: 584284258, guid: 61df7992cfdfb6040a4a5a575f3f1a8a, type: 3}
+  largeFishSprite: {fileID: 0}
   biomeType: 2
   fishDescription: A sleek, agile fish whose green-and-brown scales shift to match
     surrounding plants.
+  fishWeight: 
+  fishLength: 

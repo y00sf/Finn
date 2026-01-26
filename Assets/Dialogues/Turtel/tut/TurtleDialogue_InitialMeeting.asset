@@ -1,0 +1,162 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4bbfd8de00222a4eb389c5d917453b0, type: 3}
+  m_Name: TurtleDialogue_InitialMeeting
+  m_EditorClassIdentifier: 
+  dialogueName: TurtleDialogue_InitialMeeting
+  npc: {fileID: 11400000, guid: 0c7f253aa2434a24b842e9fb6d81dcd5, type: 2}
+  lines:
+  - id: line_0
+    speakerName: NPC
+    text: ' Boy! Come here!
+
+'
+    nextNodeID: line_1
+    setFlag: 0
+    flagToSet: 
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 
+  - id: line_1
+    speakerName: NPC
+    text: ' Oh, a new face. What is your name, boy?'
+    nextNodeID: line_2
+    setFlag: 0
+    flagToSet: 
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 
+  - id: line_2
+    speakerName: Player
+    text: ' My name is Finn. I''m looking for my way through Fishers'' Island.'
+    nextNodeID: line_4
+    setFlag: 0
+    flagToSet: 
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 
+  - id: line_4
+    speakerName: NPC
+    text: You look too young to be chasing riches and fame. What brings you
+    nextNodeID: line_5
+    setFlag: 0
+    flagToSet: 
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 
+  - id: line_5
+    speakerName: Player
+    text: I came to learn more about my father. I heard he was a great fisher
+    nextNodeID: line_6
+    setFlag: 0
+    flagToSet: 
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 
+  - id: line_6
+    speakerName: NPC
+    text: And what is your father's name?
+    nextNodeID: line_7
+    setFlag: 0
+    flagToSet: 
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 
+  - id: line_7
+    speakerName: Player
+    text: '*Finn spoke his father''s name*'
+    nextNodeID: line_8
+    setFlag: 0
+    flagToSet: 
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 
+  - id: line_8
+    speakerName: NPC
+    text: "He is your father? I knew him once\u2014what a great fisher he was."
+    nextNodeID: line_9
+    setFlag: 0
+    flagToSet: 
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 
+  - id: line_9
+    speakerName: NPC
+    text: "And that rod of yours\u2026 I thought it looked familiar."
+    nextNodeID: line_10
+    setFlag: 0
+    flagToSet: 
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 
+  - id: line_10
+    speakerName: NPC
+    text: So you decided to come. He was right, after all.
+    nextNodeID: line_11
+    setFlag: 0
+    flagToSet: 
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 
+  - id: line_11
+    speakerName: Player
+    text: You knew my father?!
+    nextNodeID: line_12
+    setFlag: 0
+    flagToSet: 
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 
+  - id: line_12
+    speakerName: NPC
+    text: "You will get your answers\u2014if you truly are his son. Here,"
+    nextNodeID: line_13
+    setFlag: 0
+    flagToSet: 
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 
+  - id: line_13
+    speakerName: NPC
+    text: take this bait pouch. Show me what you've got.
+    nextNodeID: 
+    setFlag: 1
+    flagToSet: turtle_met
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 

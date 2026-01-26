@@ -1,44 +1,35 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class ConversationManager : MonoBehaviour
 {
-
     public static ConversationManager Instance { get; private set; }
 
     [Header("References")]
     [SerializeField] private DialogueUI dialogueUI;
+    [Header("Scripts to Toggle")]
+    [SerializeField] private FishingCaster fishingCaster;
+    [SerializeField] private PlayerMovement playerInput;
+    [SerializeField] private PlayerInteraction playerInteraction;
 
     private DialogueData currentDialogue;
-    private int currentLineIndex = 0;
+    private DialogueNode currentNode;
+    private NPC currentNPC;
     private bool isRunning = false;
     
-    public event Action<DialogueData> OnDialogueStart;
+    [SerializeField] public event Action<DialogueData> OnDialogueStart;
     public event Action OnDialogueEnd;
     public event Action<DialogueNode> OnLineShow;
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
     private void Start()
     {
-        if (dialogueUI == null)
-        {
-            dialogueUI = FindObjectOfType<DialogueUI>();
-        }
+        if (dialogueUI == null) dialogueUI = FindObjectOfType<DialogueUI>();
 
         if (dialogueUI != null)
         {
@@ -46,130 +37,131 @@ public class ConversationManager : MonoBehaviour
         }
     }
     
-    public void StartDialogue(DialogueData dialogue)
+    public void StartDialogue(DialogueData dialogue, NPC npc, Transform npcTransform = null)
     {
-        if (dialogue == null)
+        if (dialogue == null || !dialogue.Validate()) 
         {
-            Debug.LogError("[DialogueRunner] Cannot start null dialogue");
+            Debug.LogError("DialogueData is null or invalid!");
             return;
         }
 
-        if (!dialogue.Validate())
-        {
-            Debug.LogError($"[DialogueRunner] Dialogue '{dialogue.dialogueName}' failed validation");
-            return;
-        }
+        if (isRunning) return;
 
-        if (isRunning)
-        {
-            Debug.LogWarning("[DialogueRunner] Dialogue already running, stopping current dialogue");
-            EndDialogue();
-        }
-
+        if (dialogue.lines == null || dialogue.lines.Count == 0) return;
+    
         currentDialogue = dialogue;
-        currentLineIndex = 0;
+        currentNode = dialogue.lines[0];
+        currentNPC = npc;
         isRunning = true;
+        
+        if (dialogueUI != null && npcTransform != null)
+        {
+            dialogueUI.SetCurrentNPC(npcTransform);
+        }
 
         OnDialogueStart?.Invoke(dialogue);
-        Debug.Log($"[DialogueRunner] Starting dialogue: {dialogue.dialogueName}");
-
-        ShowCurrentLine();
+        SetPlayerScriptsEnabled(false);
+        ShowCurrentNode();
     }
 
-   
-    private void ShowCurrentLine()
+    private void ShowCurrentNode()
     {
-        if (currentDialogue == null || currentLineIndex >= currentDialogue.lines.Count)
+        if (currentNode == null)
         {
             EndDialogue();
             return;
         }
-
-        DialogueNode line = currentDialogue.lines[currentLineIndex];
         
-        if (line == null)
+        if (currentNode.setFlag && !string.IsNullOrEmpty(currentNode.flagToSet))
         {
-            Debug.LogError($"[DialogueRunner] Null line at index {currentLineIndex}");
-            EndDialogue();
-            return;
+            GameFlags.Instance.SetFlag(currentNode.flagToSet, currentNode.flagValue);
         }
 
-    
-        if (line.setFlag && !string.IsNullOrEmpty(line.flagToSet))
-        {
-            GameFlags.Instance.SetFlag(line.flagToSet, line.flagValue);
-            Debug.Log($"[DialogueRunner] Set flag '{line.flagToSet}' to {line.flagValue}");
-        }
-
-        OnLineShow?.Invoke(line);
-        Debug.Log($"[DialogueRunner] Showing line {currentLineIndex}: '{line.text}'");
-
+        OnLineShow?.Invoke(currentNode);
+        
         if (dialogueUI != null)
         {
-            dialogueUI.ShowLine(line.text, line.speakerName);
+            dialogueUI.ShowLine(currentNode.text, currentNode.speakerName, currentNPC);
         }
     }
 
-  
     private void HandleContinue()
     {
-        if (!isRunning) return;
+        if (!isRunning || currentNode == null) return;
 
-        currentLineIndex++;
-        ShowCurrentLine();
-    }
-
-
-    public void GoToLine(string lineID)
-    {
-        if (currentDialogue == null)
+        string nextID = currentNode.nextNodeID;
+        
+        if (currentNode.useCondition && !string.IsNullOrEmpty(currentNode.requiredFlag))
         {
-            Debug.LogError("[DialogueRunner] No dialogue running");
-            return;
+            bool flagValue = GameFlags.Instance.GetFlag(currentNode.requiredFlag);
+            
+            nextID = flagValue ? currentNode.trueNodeID : currentNode.falseNodeID;
+        
+            Debug.Log($"[Branching] Flag '{currentNode.requiredFlag}' is {flagValue}. Going to: {nextID}");
         }
 
-        for (int i = 0; i < currentDialogue.lines.Count; i++)
+        if (!string.IsNullOrEmpty(nextID))
         {
-            if (currentDialogue.lines[i].id == lineID)
+            DialogueNode nextNode = currentDialogue.GetNode(nextID);
+            if (nextNode != null)
             {
-                currentLineIndex = i;
-                ShowCurrentLine();
-                return;
+                currentNode = nextNode;
+                ShowCurrentNode();
+            }
+            else
+            {
+                Debug.LogWarning($"Node '{nextID}' not found. Ending dialogue.");
+                EndDialogue();
             }
         }
-
-        Debug.LogError($"[DialogueRunner] Line ID '{lineID}' not found");
+        else
+        {
+            Debug.Log("No next node - ending dialogue");
+            EndDialogue();
+        }
     }
 
- 
     public void EndDialogue()
     {
         if (!isRunning) return;
 
-        Debug.Log("[DialogueRunner] Ending dialogue");
-
+        Debug.Log("Ending dialogue...");
+    
         isRunning = false;
         currentDialogue = null;
-        currentLineIndex = 0;
+        currentNode = null;
 
-        if (dialogueUI != null)
-        {
-            dialogueUI.Hide();
-        }
+        if (dialogueUI != null) dialogueUI.Hide();
+        
+        StartCoroutine(EnablePlayerAfterDelay());
 
         OnDialogueEnd?.Invoke();
     }
-
-    public bool IsDialogueRunning()
+    
+    private System.Collections.IEnumerator EnablePlayerAfterDelay()
     {
-        return isRunning;
+   
+        yield return new WaitForSeconds(0.2f);
+    
+        SetPlayerScriptsEnabled(true);
     }
 
     private void OnDestroy()
     {
-        if (dialogueUI != null)
-        {
-            dialogueUI.OnContinueClicked -= HandleContinue;
-        }
+        if (dialogueUI != null) dialogueUI.OnContinueClicked -= HandleContinue;
+    }
+    
+    private void SetPlayerScriptsEnabled(bool enabled)
+    {
+        if (fishingCaster != null) fishingCaster.enabled = enabled;
+        if (playerInput != null) playerInput.enabled = enabled;
+        
+      
+        if (playerInteraction != null) playerInteraction.enabled = enabled;
+    }
+    
+    public bool IsDialogueRunning()
+    {
+        return isRunning;
     }
 }

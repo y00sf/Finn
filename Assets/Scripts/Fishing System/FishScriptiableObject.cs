@@ -11,12 +11,12 @@ public enum BiomeType
 public class FishScriptiableObject : ScriptableObject
 {
     [Header("Fish Data")]
-    [SerializeField] private string fishName;
+    [SerializeField] public string fishName;
     [SerializeField] private Sprite smallFishSprite;
     [SerializeField] private Sprite largeFishSprite;
     ///[SerializeField] private Sprite icon;
     [SerializeField] private BiomeType biomeType;
-    
+    public bool collected = false;
     [TextArea]
     [SerializeField] private string fishDescription;
 

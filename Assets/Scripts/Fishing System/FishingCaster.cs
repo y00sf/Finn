@@ -85,7 +85,6 @@ public class FishingCaster : MonoBehaviour
         }
         else if (isCharging)
         {
-            // Player just released the button
             isCharging = false;
             PerformThrow();
             powerSlider.gameObject.SetActive(false); 
@@ -118,7 +117,7 @@ public class FishingCaster : MonoBehaviour
     
         float percentage = currentValue / 100f;
         float dist = percentage * maxCastDistance;
-    // Determine direction (forward, but flat on the ground)
+    
         Vector3 flatForward = transform.forward;
         flatForward.y = 0;
         flatForward.Normalize();

@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Riverfang
   m_EditorClassIdentifier: 
   fishName: Riverfang
-  icon: {fileID: 0}
+  smallFishSprite: {fileID: 1662361652, guid: 27c9fba44971c0d43961b398bb45367e, type: 3}
+  largeFishSprite: {fileID: 0}
   biomeType: 2
   fishDescription: A lean, sharp-toothed river fish with muted green scales.
+  fishWeight: 
+  fishLength: 

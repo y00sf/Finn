@@ -41,6 +41,8 @@ public class Journal : MonoBehaviour
         if (FishingManager.Instance != null)
         {
             FishingManager.Instance.OnFishCaught.AddListener(RegisterCaughtFish);
+            
+            SyncAlreadyCaughtFish(); 
         }
 
         if (infoPage != null)
@@ -51,6 +53,22 @@ public class Journal : MonoBehaviour
 
         CreateInitialPage();
         UpdateNavigationButtons();
+    }
+    
+    private void SyncAlreadyCaughtFish()
+    {
+        if (FishingManager.Instance == null) return;
+        
+        List<FishScriptiableObject> allFish = FishingManager.Instance.GetAllFish();
+
+        foreach (var fish in allFish)
+        {
+            if (fish.collected && !caughtFish.Contains(fish))
+            {
+                caughtFish.Add(fish);
+                CreateFishCell(fish);
+            }
+        }
     }
 
     private void OnDestroy()
@@ -129,7 +147,7 @@ public class Journal : MonoBehaviour
 
         GameObject cell = Instantiate(fishCellPrefab, targetPage.CellsContainer);
         
-        FishCell cellScript = cell.GetComponent<FishCell>();
+        FishCell cellScript = cell.GetComponentInChildren<FishCell>();
         if (cellScript != null)
         {
             cellScript.Setup(fish, this);
@@ -234,7 +252,7 @@ public class Journal : MonoBehaviour
 
     private void ShowJournalNotification()
     {
-        if (journalNotification == null) return;
+        if (journalNotification == null || !gameObject.activeInHierarchy) return;
 
         if (notificationCoroutine != null)
         {

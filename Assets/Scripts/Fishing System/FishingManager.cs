@@ -15,10 +15,13 @@ public class BaitItem
     [SerializeField] private int currentDurability;
 
     [Header("Minigame Reference")]
-  
     [SerializeField] private MiniGameBase miniGame; 
 
-    public int CurrentDurability => currentDurability;
+    public int CurrentDurability
+    {
+        get => currentDurability;
+        set => currentDurability = Mathf.Clamp(value, 0, maxDurability);
+    }
     public MiniGameBase MiniGame => miniGame;
 
     public void ResetToFull() => currentDurability = Mathf.Clamp(maxDurability, 0, int.MaxValue);
@@ -43,17 +46,21 @@ public class FishingManager : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private GameObject catchNotificationPanel;
     [SerializeField] private TextMeshProUGUI catchText;
+    [SerializeField] private Image BaitImage;
     [SerializeField] private float notificationDuration = 3f;
 
     [Header("Bait Inventory")]
-    [SerializeField] private BaitItem[] baits;
-    [SerializeField] private int currentBaitIndex = 0;
-    [SerializeField] private int durabilityCostPerCast = 1;
+    [SerializeField] public BaitItem[] baits;
+    [SerializeField] public int currentBaitIndex = 0;
+    [SerializeField] public int durabilityCostPerCast = 1;
 
     [Header("Bait Durability UI")]
     [SerializeField] private Slider durabilitySlider;
     [SerializeField] private Image durabilityFillImage;
     [SerializeField] private Gradient durabilityGradient;
+
+    [Header("Global MiniGames")] 
+    [SerializeField] private FishingMiniGame finalReelingGame; 
 
     [Header("Events")]
     public UnityEvent<FishScriptiableObject> OnFishCaught;
@@ -63,10 +70,8 @@ public class FishingManager : MonoBehaviour
     private FishScriptiableObject currentFishData;
     private IMiniGame _activeMiniGame;
 
- 
     private void OnDestroy()
     {
-        // If this prints when you didn't expect it, we found the bug.
         Debug.LogWarning($"[FishingManager] The FishingManager on object '{gameObject.name}' was destroyed! Stack Trace: {System.Environment.StackTrace}");
     }
 
@@ -80,26 +85,23 @@ public class FishingManager : MonoBehaviour
         }
         Instance = this;
 
-        if (baits != null)
-        {
-            foreach (var b in baits)
-                b?.ResetToFull();
-        }
+     
     }
 
     private void Start()
     {
         if (catchNotificationPanel != null)
             catchNotificationPanel.SetActive(false);
+        
+        if (finalReelingGame != null) 
+            finalReelingGame.gameObject.SetActive(false);
 
-        // Hide all minigame objects at start
         if (baits != null)
         {
             foreach (var b in baits)
             {
                 if (b != null && b.MiniGame != null)
                 {
-                    // SAFETY CHECK 1: Ensure we aren't hiding the Manager or Canvas
                     if (b.MiniGame.gameObject == this.gameObject || b.MiniGame.transform.root == this.transform)
                     {
                         Debug.LogError($"[CRITICAL ERROR] Bait '{b.name}' has the FishingManager or Canvas assigned as its MiniGame! This will delete your UI.");
@@ -120,6 +122,7 @@ public class FishingManager : MonoBehaviour
         if (index < 0 || index >= baits.Length) return;
 
         currentBaitIndex = index;
+        BaitImage.sprite = baits[index].icon;
         UpdateDurabilityUI();
     }
 
@@ -128,8 +131,7 @@ public class FishingManager : MonoBehaviour
         if (baits == null || baits.Length == 0) return;
         var bait = baits[currentBaitIndex];
         if (bait == null) return;
-
-        // Consume durability
+        
         if (!bait.Consume(durabilityCostPerCast))
         {
             Debug.Log("[FishingManager] Not enough durability.");
@@ -153,7 +155,6 @@ public class FishingManager : MonoBehaviour
 
     private void LaunchMiniGameForBait(IMiniGame game)
     {
-     
         MonoBehaviour gameMono = game as MonoBehaviour;
         if (gameMono != null)
         {
@@ -168,7 +169,6 @@ public class FishingManager : MonoBehaviour
                 return;
             }
             
-         
             Transform checkParent = gameMono.transform;
             while (checkParent != null)
             {
@@ -181,7 +181,6 @@ public class FishingManager : MonoBehaviour
             }
         }
 
-     
         if (_activeMiniGame != null && _activeMiniGame != game)
         {
             MonoBehaviour oldMono = _activeMiniGame as MonoBehaviour;
@@ -194,7 +193,6 @@ public class FishingManager : MonoBehaviour
 
         _activeMiniGame = game;
         
-    
         if (gameMono != null) 
         {
             gameMono.gameObject.SetActive(true);
@@ -204,7 +202,6 @@ public class FishingManager : MonoBehaviour
 
     private void OnMiniGameEnded(bool win)
     {
-      
         if (_activeMiniGame != null)
         {
             MonoBehaviour gameMono = _activeMiniGame as MonoBehaviour;
@@ -216,16 +213,32 @@ public class FishingManager : MonoBehaviour
 
         if (win)
         {
-            if (currentFishData != null)
-                ProcessCaughtFish(currentFishData);
+            if (_activeMiniGame == finalReelingGame)
+            {
+                if (currentFishData != null)
+                    ProcessCaughtFish(currentFishData);
+
+                _activeMiniGame = null;
+            }
+            else 
+            {
+                if (finalReelingGame != null)
+                {
+                    LaunchMiniGameForBait(finalReelingGame);
+                }
+                else
+                {
+                    Debug.LogWarning("[FishingManager] No Final Reeling Game assigned! Catching immediately.");
+                    ProcessCaughtFish(currentFishData);
+                    _activeMiniGame = null;
+                }
+            }
         }
         else
         {
             OnFishEscaped?.Invoke();
+            _activeMiniGame = null;
         }
-
-        currentFishData = null;
-        _activeMiniGame = null;
     }
 
     private void UpdateDurabilityUI()
@@ -267,8 +280,10 @@ public class FishingManager : MonoBehaviour
     }
     private void ProcessCaughtFish(FishScriptiableObject fish)
     {
+        fish.collected = true; 
         OnFishCaught?.Invoke(fish);
         ShowCatchNotification(fish);
+        Debug.Log($"[FishingManager] Caught {fish.FishName}. Marked collected as: {fish.collected}");
     }
     private void ShowCatchNotification(FishScriptiableObject fish)
     {
@@ -292,5 +307,16 @@ public class FishingManager : MonoBehaviour
         if (currentBaitIndex < 0 || currentBaitIndex >= baits.Length) return false;
         bait = baits[currentBaitIndex];
         return bait != null;
+    }
+    
+    
+    
+    public System.Collections.Generic.List<FishScriptiableObject> GetAllFish()
+    {
+        var allFish = new System.Collections.Generic.List<FishScriptiableObject>();
+        if (iceBiomeFish != null) allFish.AddRange(iceBiomeFish);
+        if (volcanoBiomeFish != null) allFish.AddRange(volcanoBiomeFish);
+        if (wildeBiomeFish != null) allFish.AddRange(wildeBiomeFish);
+        return allFish;
     }
 }

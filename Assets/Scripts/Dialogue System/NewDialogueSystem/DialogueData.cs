@@ -6,6 +6,7 @@ public class DialogueData : ScriptableObject
 {
     [Header("Dialogue Settings")]
     public string dialogueName = "New Dialogue";
+    public NPC npc;
 
     [Header("Dialogue Lines")]
     public List<DialogueNode> lines = new List<DialogueNode>();
