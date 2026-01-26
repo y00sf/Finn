@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 
 public class FishingMiniGame : MiniGameBase
@@ -9,6 +10,7 @@ public class FishingMiniGame : MiniGameBase
     [SerializeField] private GameObject gamePanel;
     [SerializeField] private RectTransform pointer;
     [SerializeField] private RectTransform Target;
+    [SerializeField] private Image TargetImage;
     [SerializeField] private TextMeshProUGUI counterText;
     [SerializeField] private TextMeshProUGUI healthText;
 
@@ -118,6 +120,12 @@ public class FishingMiniGame : MiniGameBase
         Target.rotation = Quaternion.Euler(0, 0, randomAngle);
     }
 
+    private void ChangeTargetSize()
+    {
+        float size = Random.Range(0.06f, 0.12f);
+        TargetImage.fillAmount = size;
+    }
+
     private void OnFail()
     {
         currentHealth--;
@@ -145,6 +153,7 @@ public class FishingMiniGame : MiniGameBase
         isClockwise = !isClockwise;
         currentSpeed += speedIncrease;
 
+        ChangeTargetSize();
         ChangeTargetRot();
     }
 }
