@@ -17,6 +17,9 @@ MonoBehaviour:
   largeFishSprite: {fileID: -1472879863, guid: 5695a1c09954a394e80d081457911462, type: 3}
   biomeType: 2
   collected: 0
-  fishDescription: She's a great driving instructor; I got my license thanks to her!
+  fishDescription: 'She''s a great driving instructor
+
+    I got my license thanks
+    to her!'
   fishWeight: 
   fishLength: 

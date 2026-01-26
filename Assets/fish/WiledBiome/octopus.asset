@@ -17,6 +17,8 @@ MonoBehaviour:
   largeFishSprite: {fileID: -1396407552, guid: 71edfefca3f3a2442a45f778bc3f5325, type: 3}
   biomeType: 2
   collected: 0
-  fishDescription: Eight tentacles and three hearts;definitely can't get heartbroken.
+  fishDescription: 'Eight tentacles and three hearts
+
+    definitely can''t get heartbroken.'
   fishWeight: 
   fishLength: 
