@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4bbfd8de00222a4eb389c5d917453b0, type: 3}
   m_Name: Dialuage
   m_EditorClassIdentifier: 
-  startNodeID: 
-  nodes: []
+  dialogueName: New Dialogue
+  lines: []

@@ -1,19 +1,19 @@
 using UnityEngine;
 using System.Collections.Generic;
-
+using System;
 
 public class GameFlags : MonoBehaviour
 {
     public static GameFlags Instance { get; private set; }
 
-    private Dictionary<string, bool> flags = new Dictionary<string, bool>();
-    private Dictionary<string, int> intVariables = new Dictionary<string, int>();
+    public Dictionary<string, bool> flags = new Dictionary<string, bool>();
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            LoadFromPlayerPrefs();
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -22,13 +22,12 @@ public class GameFlags : MonoBehaviour
         }
     }
 
-    
     public void SetFlag(string flagName, bool value)
     {
         if (string.IsNullOrEmpty(flagName)) return;
-        
         flags[flagName] = value;
         Debug.Log($"[GameFlags] Set '{flagName}' to {value}");
+        SaveToPlayerPrefs(); // Auto-save on change (Optional)
     }
 
     public bool GetFlag(string flagName)
@@ -37,73 +36,45 @@ public class GameFlags : MonoBehaviour
         return flags.ContainsKey(flagName) ? flags[flagName] : false;
     }
 
-    public bool HasFlag(string flagName)
+    // --- SAVE SYSTEM FIX ---
+    
+    [Serializable]
+    private class SaveData
     {
-        return flags.ContainsKey(flagName);
+        public List<string> keys = new List<string>();
+        public List<bool> values = new List<bool>();
     }
 
-
-    public void SetInt(string varName, int value)
-    {
-        if (string.IsNullOrEmpty(varName)) return;
-        
-        intVariables[varName] = value;
-        Debug.Log($"[GameFlags] Set '{varName}' to {value}");
-    }
-
-    public int GetInt(string varName)
-    {
-        if (string.IsNullOrEmpty(varName)) return 0;
-        return intVariables.ContainsKey(varName) ? intVariables[varName] : 0;
-    }
-
-    public void ModifyInt(string varName, int delta)
-    {
-        int current = GetInt(varName);
-        SetInt(varName, current + delta);
-    }
-
-  
-    public void ClearAllFlags()
-    {
-        flags.Clear();
-        intVariables.Clear();
-        Debug.Log("[GameFlags] All flags cleared");
-    }
-
-    public void DebugPrintFlags()
-    {
-        Debug.Log("=== Current Flags ===");
-        foreach (var kvp in flags)
-        {
-            Debug.Log($"  {kvp.Key}: {kvp.Value}");
-        }
-        foreach (var kvp in intVariables)
-        {
-            Debug.Log($"  {kvp.Key}: {kvp.Value}");
-        }
-    }
-
-  
     public void SaveToPlayerPrefs()
     {
+        SaveData data = new SaveData();
         foreach (var kvp in flags)
         {
-            PlayerPrefs.SetInt($"flag_{kvp.Key}", kvp.Value ? 1 : 0);
+            data.keys.Add(kvp.Key);
+            data.values.Add(kvp.Value);
         }
-        foreach (var kvp in intVariables)
-        {
-            PlayerPrefs.SetInt($"int_{kvp.Key}", kvp.Value);
-        }
+
+        string json = JsonUtility.ToJson(data);
+        PlayerPrefs.SetString("GameFlags_Save", json);
         PlayerPrefs.Save();
-        Debug.Log("[GameFlags] Saved to PlayerPrefs");
     }
 
     public void LoadFromPlayerPrefs()
     {
-        flags.Clear();
-        intVariables.Clear();
-        
-        Debug.Log("[GameFlags] Loaded from PlayerPrefs");
+        if (PlayerPrefs.HasKey("GameFlags_Save"))
+        {
+            string json = PlayerPrefs.GetString("GameFlags_Save");
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+            flags.Clear();
+            for (int i = 0; i < data.keys.Count; i++)
+            {
+                if (i < data.values.Count)
+                {
+                    flags[data.keys[i]] = data.values[i];
+                }
+            }
+            Debug.Log("[GameFlags] Data Loaded Successfully");
+        }
     }
 }

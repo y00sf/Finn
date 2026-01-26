@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d186e25defee73b4caa4bb3c9ed512e6, type: 3}
+  m_Name: octopus
+  m_EditorClassIdentifier: 
+  fishName: octopus
+  smallFishSprite: {fileID: 1012498264, guid: 93a8ab294435f1742926fe2da9085ccc, type: 3}
+  largeFishSprite: {fileID: -1396407552, guid: 71edfefca3f3a2442a45f778bc3f5325, type: 3}
+  biomeType: 2
+  collected: 0
+  fishDescription: Eight tentacles and three hearts;definitely can't get heartbroken.
+  fishWeight: 
+  fishLength: 

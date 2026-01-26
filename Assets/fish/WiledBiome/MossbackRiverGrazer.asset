@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: MossbackRiverGrazer
   m_EditorClassIdentifier: 
   fishName: Mossback River Grazer
-  icon: {fileID: 0}
+  smallFishSprite: {fileID: 1011734077, guid: 4976b19957025624bb2587d452ae04b6, type: 3}
+  largeFishSprite: {fileID: 0}
   biomeType: 0
   fishDescription: Slow and sturdy, this rounded fish is covered in soft moss and
     algae that grow naturally along its back.
+  fishWeight: 
+  fishLength: 

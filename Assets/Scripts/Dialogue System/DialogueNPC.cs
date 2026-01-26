@@ -8,7 +8,6 @@ public class DialogueEntry
     public DialogueData dialogue;
 }
 
-
 public class DialogueNPC : MonoBehaviour
 {
     [Header("Conversation Settings")]
@@ -17,35 +16,37 @@ public class DialogueNPC : MonoBehaviour
     [Header("Conversation Registry")]
     public List<DialogueEntry> allConversations = new List<DialogueEntry>();
 
+    [SerializeField] private NPC npc;
+
     [Header("Optional Settings")]
-    [Tooltip("If true, automatically switches to return conversation after first meeting")]
     public bool useReturnConversation = false;
     public string returnConversationID = "return_greeting";
+    
     private string flagKey;
+    private DialogueUI cachedUI;
 
     private void Start()
     {
         flagKey = $"met_{gameObject.name}";
+        cachedUI = FindObjectOfType<DialogueUI>();
     }
-
     
     public void Interact()
     {
+        string conversationToPlay = defaultConversationID;
+
         if (useReturnConversation)
         {
             bool hasMet = GameFlags.Instance.GetFlag(flagKey);
-            string conversationToPlay = hasMet ? returnConversationID : defaultConversationID;
-            PlayConversation(conversationToPlay);
+            conversationToPlay = hasMet ? returnConversationID : defaultConversationID;
             
             if (!hasMet)
             {
                 GameFlags.Instance.SetFlag(flagKey, true);
             }
         }
-        else
-        {
-            PlayConversation(defaultConversationID);
-        }
+
+        PlayConversation(conversationToPlay);
     }
     
     public void PlayConversation(string id)
@@ -54,62 +55,37 @@ public class DialogueNPC : MonoBehaviour
         
         if (dialogueToPlay != null)
         {
-            DialogueUI ui = FindObjectOfType<DialogueUI>();
-            if (ui != null)
-            {
-                ui.SetCurrentNPC(transform);
-            }
-
-          
             if (ConversationManager.Instance != null)
             {
-                ConversationManager.Instance.StartDialogue(dialogueToPlay);
-            }
-            else
-            {
-                Debug.LogError($"DialogueRunner not found! Cannot play conversation '{id}'");
+                ConversationManager.Instance.StartDialogue(dialogueToPlay, npc ,transform);
             }
         }
         else
         {
-            Debug.LogWarning($"NPC '{gameObject.name}' could not find conversation with ID: {id}");
+            Debug.LogWarning($"NPC '{gameObject.name}' could not find conversation ID: {id}");
+        }
+    
+    }
+    
+    public void SetActiveConversation(string newID)
+    {
+        defaultConversationID = newID;
+        if (GetDialogueByID(newID) == null)
+        {
+            Debug.LogWarning($"[DialogueNPC] Warning: Switching to conversation ID '{newID}' but it was not found in the list.");
+        }
+        else
+        {
+            Debug.Log($"NPC '{gameObject.name}' default conversation changed to: {newID}");
         }
     }
 
-   
     private DialogueData GetDialogueByID(string id)
     {
         foreach (var entry in allConversations)
         {
-            if (entry.conversationID == id)
-            {
-                return entry.dialogue;
-            }
+            if (entry.conversationID == id) return entry.dialogue;
         }
         return null;
     }
-    
-   
-    public void SetActiveConversation(string newID)
-    {
-        defaultConversationID = newID;
-        Debug.Log($"NPC '{gameObject.name}' default conversation changed to: {newID}");
-    }
-
-  
-    public bool HasConversation(string id)
-    {
-        return GetDialogueByID(id) != null;
-    }
-
-   
-    public void ResetMetFlag()
-    {
-        if (!string.IsNullOrEmpty(flagKey))
-        {
-            GameFlags.Instance.SetFlag(flagKey, false);
-            Debug.Log($"Reset 'met' flag for {gameObject.name}");
-        }
-    }
-    
 }

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d186e25defee73b4caa4bb3c9ed512e6, type: 3}
+  m_Name: pufferfish
+  m_EditorClassIdentifier: 
+  fishName: pufferfish
+  smallFishSprite: {fileID: 1011734077, guid: 4976b19957025624bb2587d452ae04b6, type: 3}
+  largeFishSprite: {fileID: -1472879863, guid: 5695a1c09954a394e80d081457911462, type: 3}
+  biomeType: 2
+  collected: 0
+  fishDescription: She's a great driving instructor; I got my license thanks to her!
+  fishWeight: 
+  fishLength: 

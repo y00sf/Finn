@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4bbfd8de00222a4eb389c5d917453b0, type: 3}
+  m_Name: TurtleDialogue_AfterFishing
+  m_EditorClassIdentifier: 
+  dialogueName: TurtleDialogue_AfterFishing
+  lines:
+  - id: line_0
+    speakerName: NPC
+    text: A little rough around the edges, but you've got talent.
+    nextNodeID: line_1
+    setFlag: 0
+    flagToSet: 
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 
+  - id: line_1
+    speakerName: NPC
+    text: 'If you want your answers, follow that path. When you feel you''ve learned
+      your truth, come see me before you leave.
+
+'
+    nextNodeID: line_2
+    setFlag: 0
+    flagToSet: 
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 
+  - id: line_2
+    speakerName: Player
+    text: Thank you. I'll be back.
+    nextNodeID: 
+    setFlag: 0
+    flagToSet: 
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 
