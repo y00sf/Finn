@@ -8068,6 +8068,7 @@ MonoBehaviour:
   gamePanel: {fileID: 7530343042673908307}
   pointer: {fileID: 1459408453954191414}
   Target: {fileID: 4792532695617928629}
+  TargetImage: {fileID: 2125520806029141542}
   counterText: {fileID: 5983163187527751655}
   healthText: {fileID: 3313594136811095601}
   clickAction:

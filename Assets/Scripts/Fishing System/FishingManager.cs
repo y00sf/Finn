@@ -260,6 +260,7 @@ public class FishingManager : MonoBehaviour
             float t = durabilitySlider.maxValue <= 0 ? 0 : durabilitySlider.value / durabilitySlider.maxValue;
             durabilityFillImage.color = durabilityGradient.Evaluate(t);
         }
+        BaitImage.sprite = baits[currentBaitIndex].icon;
     }
 
     public void SetCurrentBiome(BiomeType biome) => currentBiome = biome;
