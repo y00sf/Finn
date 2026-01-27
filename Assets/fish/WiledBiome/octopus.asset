@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fishName: octopus
   smallFishSprite: {fileID: 1012498264, guid: 93a8ab294435f1742926fe2da9085ccc, type: 3}
-  largeFishSprite: {fileID: -1396407552, guid: 71edfefca3f3a2442a45f778bc3f5325, type: 3}
+  largeFishSprite: {fileID: 21300000, guid: 15c925b5750203f41b521e77a514b04d, type: 3}
   biomeType: 2
   collected: 0
   fishDescription: Eight tentacles and three hearts;definitely can't get heartbroken.

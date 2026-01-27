@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5695a1c09954a394e80d081457911462
+guid: 4e27622ff7645b24a889a408344b141a
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -69,7 +69,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 4096
+    maxTextureSize: 16384
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -110,23 +110,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Pufferfish_0
+      name: Icon_blank_0
       rect:
         serializedVersion: 2
-        x: 1387
-        y: 422
-        width: 426
-        height: 371
+        x: 658
+        y: 714
+        width: 170
+        height: 170
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 424eec9a07cfaf44fb4a0886666563f6
-      internalID: -1472879863
+      spriteID: 62ee181c8966d584c95b92a0ba5d8f5f
+      internalID: 1724723537
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 4737357a75746d14098d9b1342ef6eec
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -145,7 +145,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Pufferfish_0: -1472879863
+      Icon_blank_0: 1724723537
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

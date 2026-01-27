@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fishName: Eel
   smallFishSprite: {fileID: 1662361652, guid: 27c9fba44971c0d43961b398bb45367e, type: 3}
-  largeFishSprite: {fileID: 441607240, guid: b3be1c2ec68c6544a949aa9540932bdc, type: 3}
+  largeFishSprite: {fileID: 21300000, guid: ec2ee5a3de9ab8741957773a19e65954, type: 3}
   biomeType: 2
   collected: 0
   fishDescription: 

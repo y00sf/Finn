@@ -47,31 +47,37 @@ MonoBehaviour:
   iceBiomeFish: []
   volcanoBiomeFish: []
   wildeBiomeFish:
-  - {fileID: 11400000, guid: 5f0da24da35f635429cadd7ad475619c, type: 2}
-  - {fileID: 11400000, guid: a070170f080d5fd4eb9ca233d80150dd, type: 2}
-  - {fileID: 11400000, guid: 540074cf7d0399e41bf47854c1879085, type: 2}
+  - {fileID: 11400000, guid: 333383fc7f8189a449a338a1f10e022e, type: 2}
+  - {fileID: 11400000, guid: 5d318e387ba455249b22b46e6b6a131e, type: 2}
+  - {fileID: 11400000, guid: 6d1fc4d61644b284ab12f44455496213, type: 2}
+  - {fileID: 11400000, guid: 65f65db77dd673e4d83e3499d864898c, type: 2}
+  - {fileID: 11400000, guid: 5d9ea41847acd9843a37c1f4ca69316d, type: 2}
   catchNotificationPanel: {fileID: 0}
   catchText: {fileID: 0}
+  BaitImage: {fileID: 0}
   notificationDuration: 3
   baits:
   - name: bait
     description: test
-    icon: {fileID: 21300000, guid: dbf3026a309ab7f419f1f44623074c67, type: 3}
+    icon: {fileID: -847485001, guid: 1b090b6dedfe70e4e9fe79947fb30406, type: 3}
     maxDurability: 5
-    currentDurability: 0
+    currentDurability: 5
     miniGame: {fileID: 0}
+    baitPrefab: {fileID: 4541830261359880507, guid: 5623a2d1e5745c94384706fdcdb615e8, type: 3}
   - name: bait2
     description: test
-    icon: {fileID: 21300000, guid: dbf3026a309ab7f419f1f44623074c67, type: 3}
+    icon: {fileID: -974677677, guid: 86472886fc813a74399f590220e7ec5d, type: 3}
     maxDurability: 5
     currentDurability: 0
     miniGame: {fileID: 0}
+    baitPrefab: {fileID: 6504229465063229020, guid: 609ec996252b6b34eab2b910e7730eda, type: 3}
   - name: bait1
     description: test
-    icon: {fileID: 21300000, guid: dbf3026a309ab7f419f1f44623074c67, type: 3}
+    icon: {fileID: -1534342747, guid: b5df56d1fd50b9e429a22ed554c08c2e, type: 3}
     maxDurability: 5
     currentDurability: 0
     miniGame: {fileID: 0}
+    baitPrefab: {fileID: 2401629274792999360, guid: eba9f04af3d82f84b8d0b9757d158849, type: 3}
   currentBaitIndex: 0
   durabilityCostPerCast: 1
   durabilitySlider: {fileID: 0}
@@ -106,6 +112,7 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 4
     m_NumAlphaKeys: 2
+  finalReelingGame: {fileID: 0}
   OnFishCaught:
     m_PersistentCalls:
       m_Calls: []
