@@ -40,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Animation")]
     [SerializeField] private Animator animator;
 
-    private Rigidbody rb;
+    public Rigidbody rb;
     private AudioSource audioSource;
     private Transform cam;
     private ParticleSystem.EmissionModule dustEmission;

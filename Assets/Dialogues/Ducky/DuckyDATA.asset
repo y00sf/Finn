@@ -17,7 +17,7 @@ MonoBehaviour:
   lines:
   - id: line_1
     speakerName: NPC
-    text: "Hey, hey! Haven\u2019t seen a face like yours around here before!\r"
+    text: "Hey! Haven\u2019t seen you around here before.\r"
     nextNodeID: line_2
     setFlag: 0
     flagToSet: 
@@ -28,7 +28,8 @@ MonoBehaviour:
     falseNodeID: 
   - id: line_2
     speakerName: NPC
-    text: "So, what do you have here? What are you doing on this island?\r"
+    text: "You look pretty lost\u2026 don\u2019t worry, I\u2019ll give you a few
+      tips. Free of charge!\r"
     nextNodeID: line_3
     setFlag: 0
     flagToSet: 
@@ -39,8 +40,8 @@ MonoBehaviour:
     falseNodeID: 
   - id: line_3
     speakerName: NPC
-    text: "You look pretty lost\u2026 don\u2019t worry, I\u2019ll give you a few
-      tips. Free of charge!\r"
+    text: "This island is divided into four regions, each filled with countless kinds
+      of fish.\r"
     nextNodeID: line_4
     setFlag: 0
     flagToSet: 
@@ -51,8 +52,7 @@ MonoBehaviour:
     falseNodeID: 
   - id: line_4
     speakerName: NPC
-    text: "This island is divided into four regions, and each one is packed with
-      countless kinds of fish\u2014more than you can imagine.\r"
+    text: "This area alone is home to colorful tropical creatures.\r"
     nextNodeID: line_5
     setFlag: 0
     flagToSet: 
@@ -62,9 +62,8 @@ MonoBehaviour:
     trueNodeID: 
     falseNodeID: 
   - id: line_5
-    speakerName: NPC
-    text: "This part of the island is home to tropical fish and creatures of all
-      shapes and colors.\r"
+    speakerName: Player
+    text: "Huh? And how are you supposed to discover all of them?\r"
     nextNodeID: line_6
     setFlag: 0
     flagToSet: 
@@ -74,10 +73,9 @@ MonoBehaviour:
     trueNodeID: 
     falseNodeID: 
   - id: line_6
-    speakerName: Player
-    text: 'Huh? And how are you supposed to discover all of them?
-
-'
+    speakerName: NPC
+    text: "Finding them all will take real skill. Only one fisher in this island\u2019s
+      history ever managed it\r"
     nextNodeID: line_7
     setFlag: 0
     flagToSet: 
@@ -88,9 +86,7 @@ MonoBehaviour:
     falseNodeID: 
   - id: line_7
     speakerName: NPC
-    text: "That\u2019s where your skill as a fisher comes in. I only know one fisher
-      in this island\u2019s history who managed to catch so many species from every
-      region\u2026 "
+    text: "And somehow, you remind me of him.\r"
     nextNodeID: line_8
     setFlag: 0
     flagToSet: 
@@ -101,20 +97,9 @@ MonoBehaviour:
     falseNodeID: 
   - id: line_8
     speakerName: NPC
-    text: "You know\u2026 you kinda remind me of him.\r"
+    text: "Anyway, I wish you a safe journey, and don\u2019t forget to keep your
+      fishing rod sharp.\r"
     nextNodeID: line_9
-    setFlag: 0
-    flagToSet: 
-    flagValue: 0
-    useCondition: 0
-    requiredFlag: 
-    trueNodeID: 
-    falseNodeID: 
-  - id: line_9
-    speakerName: NPC
-    text: "Anyway, I wish you a safe journey\u2014and don\u2019t forget to keep your
-      fishing rod sharp."
-    nextNodeID: 
     setFlag: 0
     flagToSet: 
     flagValue: 0

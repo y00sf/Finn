@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eacc499f39249774bb6fda681bda2819, type: 3}
-  m_Name: Ducky
+  m_Name: Dog
   m_EditorClassIdentifier: 
-  npcName: Ducky
-  npcBubbleColor: {r: 0.9960785, g: 0.9215687, b: 0, a: 1}
-  npcTextColor: {r: 0.6075471, g: 0.4058415, b: 0, a: 1}
+  npcName: The Dog
+  npcBubbleColor: {r: 0.9843138, g: 0.854902, b: 0.59607846, a: 1}
+  npcTextColor: {r: 0.65882355, g: 0.40784317, b: 0.28235295, a: 1}

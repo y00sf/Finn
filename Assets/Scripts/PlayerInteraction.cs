@@ -2,19 +2,17 @@ using System;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 
 public class PlayerInteraction : MonoBehaviour
 {
     [SerializeField] private Transform interactionTransform;
     [SerializeField] private float interactionDistance = 0.5f;
     [SerializeField] [CanBeNull] private GameObject interactionUI;
-    
-    [Header("Head Animation Settings")]
     [SerializeField] private bool enableHeadTracking = true;
     [SerializeField] private Transform PlayerHead;
     [SerializeField] private float headRotationSpeed = 5f;
     [SerializeField] private float maxHeadTurnAngle = 70f;
-    
     public BaseInteractable interactable;
     public InputAction PlayerInputActions;
 
@@ -25,11 +23,18 @@ public class PlayerInteraction : MonoBehaviour
     { 
         SphereCheck();
         HandleInteractionUI(); 
-        
         if (PlayerInputActions.WasPerformedThisFrame())
         {
             Debug.Log($"E KEY PRESSED! Interactable = {(interactable != null ? interactable.gameObject.name : "NULL")}");
             interactable?.Interact();
+            if (interactable?.interactionType == InteractionType.NPC)
+            {
+                Rigidbody rb = GetComponent<Rigidbody>();
+                Animator anim = GetComponent<Animator>();
+                rb.linearVelocity = Vector3.zero;
+                anim.SetFloat("Speed", 0);
+            }
+            
         }
     }
     

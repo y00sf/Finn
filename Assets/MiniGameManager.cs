@@ -11,7 +11,8 @@ public class MiniGameManager : MonoBehaviour
 
     [Header("Active State")]
     private IMiniGame _activeGame;
-
+    
+    [SerializeField] private Rigidbody rb;
     
     public void LaunchMiniGame(MiniGameBase gameToLaunch)
     {
@@ -22,8 +23,7 @@ public class MiniGameManager : MonoBehaviour
         }
 
         _activeGame = gameToLaunch;
-        
-       
+
         OnGameStarted.Invoke(gameToLaunch.GameID);
 
       

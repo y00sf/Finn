@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a4bbfd8de00222a4eb389c5d917453b0, type: 3}
-  m_Name: Memories
+  m_Name: DuckyDATA
   m_EditorClassIdentifier: 
-  dialogueName: Memories
-  npc: {fileID: 11400000, guid: 805dcca6baaa6404d9845f72c57118c2, type: 2}
+  dialogueName: The Dog
+  npc: {fileID: 11400000, guid: bb63f896063009947aef9d41b24cde21, type: 2}
   lines:
   - id: line_1
     speakerName: NPC
-    text: "Isn\u2019t this view beautiful?"
+    text: "Hello there. New to the island?\r"
     nextNodeID: line_2
     setFlag: 0
     flagToSet: 
@@ -27,9 +27,9 @@ MonoBehaviour:
     trueNodeID: 
     falseNodeID: 
   - id: line_2
-    speakerName: NPC
-    text: Standing here, between the flowers, with the sea stretching out in front
-      of us...
+    speakerName: Player
+    text: "I\u2019m looking for information about my father.\nHe was a great fisher
+      a legend of this place.\r"
     nextNodeID: line_3
     setFlag: 0
     flagToSet: 
@@ -40,7 +40,7 @@ MonoBehaviour:
     falseNodeID: 
   - id: line_3
     speakerName: NPC
-    text: its blue so calm and mesmerizing.
+    text: "The one who caught every species on the island???\r"
     nextNodeID: line_4
     setFlag: 0
     flagToSet: 
@@ -51,7 +51,18 @@ MonoBehaviour:
     falseNodeID: 
   - id: line_4
     speakerName: NPC
-    text: "I used to play here with my brother, Germain\u2026"
+    text: Of course I know him!
+    nextNodeID: line_5
+    setFlag: 0
+    flagToSet: 
+    flagValue: 0
+    useCondition: 0
+    requiredFlag: 
+    trueNodeID: 
+    falseNodeID: 
+  - id: line_5
+    speakerName: NPC
+    text: "But no one knows what happened to him... or where he disappeared.\r"
     nextNodeID: line_6
     setFlag: 0
     flagToSet: 
@@ -62,7 +73,7 @@ MonoBehaviour:
     falseNodeID: 
   - id: line_6
     speakerName: NPC
-    text: Until the day he left to become a fisher.
+    text: "I think Your journey won\u2019t be short. Keep your baits stocked. "
     nextNodeID: line_7
     setFlag: 0
     flagToSet: 
@@ -73,7 +84,7 @@ MonoBehaviour:
     falseNodeID: 
   - id: line_7
     speakerName: NPC
-    text: "I don\u2019t know why these memories are slowly fading.\r"
+    text: Always keep an eye out for the "Guardian Creatures".
     nextNodeID: line_8
     setFlag: 0
     flagToSet: 
@@ -84,8 +95,8 @@ MonoBehaviour:
     falseNodeID: 
   - id: line_8
     speakerName: NPC
-    text: "I just hope he returns soon\u2026 safe and well.\r"
-    nextNodeID: 
+    text: They help all fishers by providing them with different kinds of baits.
+    nextNodeID: line_9
     setFlag: 0
     flagToSet: 
     flagValue: 0
