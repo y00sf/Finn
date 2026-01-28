@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fishName: ClownFish
   smallFishSprite: {fileID: 584284258, guid: 61df7992cfdfb6040a4a5a575f3f1a8a, type: 3}
-  largeFishSprite: {fileID: 1478593549, guid: 30b118c5428b69b49af37f07fc90987e, type: 3}
+  largeFishSprite: {fileID: 21300000, guid: 30b118c5428b69b49af37f07fc90987e, type: 3}
   biomeType: 2
   collected: 0
   fishDescription: Legend says he lost his child...

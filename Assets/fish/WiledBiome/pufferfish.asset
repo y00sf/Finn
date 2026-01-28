@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fishName: pufferfish
   smallFishSprite: {fileID: 1011734077, guid: 4976b19957025624bb2587d452ae04b6, type: 3}
-  largeFishSprite: {fileID: -1472879863, guid: 5695a1c09954a394e80d081457911462, type: 3}
+  largeFishSprite: {fileID: 21300000, guid: 5d8ac07d86c28cf4bbf3d80f29f9781f, type: 3}
   biomeType: 2
   collected: 0
   fishDescription: 'She''s a great driving instructor

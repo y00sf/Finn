@@ -15,7 +15,10 @@ public class BaitItem
     [SerializeField] private int currentDurability;
 
     [Header("Minigame Reference")]
-    [SerializeField] private MiniGameBase miniGame; 
+    [SerializeField] private MiniGameBase miniGame;
+
+    [Header("Prefab Reference")] 
+    public GameObject baitPrefab;
 
     public int CurrentDurability
     {
@@ -85,6 +88,7 @@ public class FishingManager : MonoBehaviour
         }
         Instance = this;
 
+        ResetAllFishData();
      
     }
 
@@ -319,5 +323,22 @@ public class FishingManager : MonoBehaviour
         if (volcanoBiomeFish != null) allFish.AddRange(volcanoBiomeFish);
         if (wildeBiomeFish != null) allFish.AddRange(wildeBiomeFish);
         return allFish;
+    }
+    
+    private void ResetAllFishData()
+    {
+        var allFish = new System.Collections.Generic.List<FishScriptiableObject>();
+        if (iceBiomeFish != null) allFish.AddRange(iceBiomeFish);
+        if (volcanoBiomeFish != null) allFish.AddRange(volcanoBiomeFish);
+        if (wildeBiomeFish != null) allFish.AddRange(wildeBiomeFish);
+
+        foreach (var fish in allFish)
+        {
+            if (fish != null)
+            {
+                fish.collected = false; 
+            }
+        }
+        
     }
 }

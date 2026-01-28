@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5695a1c09954a394e80d081457911462
+guid: d3309025b0f30774bac4bffb67983cab
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -69,7 +69,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Pufferfish_0
+      name: Photo_frame_1_0
       rect:
         serializedVersion: 2
-        x: 1387
-        y: 422
-        width: 426
-        height: 371
+        x: 1247
+        y: 285
+        width: 707
+        height: 751
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,8 +125,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 424eec9a07cfaf44fb4a0886666563f6
-      internalID: -1472879863
+      spriteID: e29da2e3331496a4eade6d5cd06c5667
+      internalID: -1545250482
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 4737357a75746d14098d9b1342ef6eec
+    spriteID: 51e305f3aa7359142835c5674a5d143c
     internalID: 0
     vertices: []
     indices: 
@@ -145,7 +145,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Pufferfish_0: -1472879863
+      Photo_frame_1_0: -1545250482
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

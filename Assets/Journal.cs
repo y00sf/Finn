@@ -18,9 +18,9 @@ public class Journal : MonoBehaviour
     [SerializeField] private Image fishImageLarge;
     [SerializeField] private TextMeshProUGUI fishName;
     [SerializeField] private TextMeshProUGUI fishDescription;
-    [SerializeField] private TextMeshProUGUI fishWeight;
-    [SerializeField] private TextMeshProUGUI fishLength;
-    [SerializeField] private TextMeshProUGUI fishBiome;
+   // [SerializeField] private TextMeshProUGUI fishWeight;
+    //[SerializeField] private TextMeshProUGUI fishLength;
+   // [SerializeField] private TextMeshProUGUI fishBiome;
 
     [Header("Navigation")]
     [SerializeField] private Button nextPageButton;
@@ -36,14 +36,16 @@ public class Journal : MonoBehaviour
     private int currentPageIndex = 0;
     private Coroutine notificationCoroutine;
 
-    private void Start()
+    private void Awake()
     {
         if (FishingManager.Instance != null)
         {
             FishingManager.Instance.OnFishCaught.AddListener(RegisterCaughtFish);
-            
-            SyncAlreadyCaughtFish(); 
         }
+    }
+    private void OnEnable()
+    {
+       
 
         if (infoPage != null)
             infoPage.SetActive(false);
@@ -52,6 +54,7 @@ public class Journal : MonoBehaviour
             journalNotification.SetActive(false);
 
         CreateInitialPage();
+        SyncAlreadyCaughtFish(); 
         UpdateNavigationButtons();
     }
     
@@ -235,7 +238,7 @@ public class Journal : MonoBehaviour
         if (fishDescription != null)
             fishDescription.text = fish.FishDescription;
 
-        if (fishWeight != null)
+       /* if (fishWeight != null)
             fishWeight.text = $"Weight: {fish.FishWeight}";
 
         if (fishLength != null)
@@ -243,6 +246,7 @@ public class Journal : MonoBehaviour
 
         if (fishBiome != null)
             fishBiome.text = $"Biome: {fish.BiomeType}";
+            */
     }
 
     public void CloseJournal()
