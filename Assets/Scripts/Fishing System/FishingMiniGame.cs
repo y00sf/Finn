@@ -2,22 +2,28 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-
+using System.Collections;
+using System.Collections.Generic;
 
 public class FishingMiniGame : MiniGameBase
 {
-    [Header("UI Elements")]
     [SerializeField] private GameObject gamePanel;
     [SerializeField] private RectTransform pointer;
     [SerializeField] private RectTransform Target;
     [SerializeField] private Image TargetImage;
     [SerializeField] private TextMeshProUGUI counterText;
-    [SerializeField] private TextMeshProUGUI healthText;
+    //[SerializeField] private TextMeshProUGUI healthText;
 
-    [Header("Input")]
+    [SerializeField] private GameObject heartPrefab;
+    [SerializeField] private Transform heartContainer;
+
+    [SerializeField] private float startDelay = 1.0f; 
+    
     [SerializeField] private InputAction clickAction;
+    [SerializeField] private AudioClip successClip;
+    [SerializeField] private AudioClip failClip;
+    [SerializeField] private AudioSource audioSource;
 
-    [Header("Game Settings")]
     [SerializeField] private float speed = 200f;
     [SerializeField] private float speedIncrease = 50f;
     [SerializeField] private int counterCount = 10;
@@ -28,10 +34,13 @@ public class FishingMiniGame : MiniGameBase
     private int currentCounter;
     private int currentHealth;
     private bool isClockwise = true;
+    
+    private bool isInputActive = false; 
+    private List<GameObject> activeHearts = new List<GameObject>();
 
     private void Update()
     {
-        if (!_isRunning) return;
+        if (!_isRunning || !isInputActive) return;
 
         float directionMultiplier = isClockwise ? -1f : 1f;
         pointer.Rotate(Vector3.forward * directionMultiplier * currentSpeed * Time.deltaTime);
@@ -39,7 +48,7 @@ public class FishingMiniGame : MiniGameBase
 
     private void OnClick(InputAction.CallbackContext context)
     {
-        if (_isRunning)
+        if (_isRunning && isInputActive)
         {
             CheckHit();
         }
@@ -52,20 +61,30 @@ public class FishingMiniGame : MiniGameBase
         if (gamePanel != null)
             gamePanel.SetActive(true);
 
-       
         if (clickAction != null)
         {
             clickAction.Enable();
             clickAction.performed += OnClick;
         }
 
+        if (audioSource == null) 
+            audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
+
+        SetupHearts(currentHealth);
         ChangeTargetRot();
         UpdateUI();
+        StartCoroutine(StartGameDelay());
+    }
+
+    private IEnumerator StartGameDelay()
+    {
+        isInputActive = false;
+        yield return new WaitForSeconds(startDelay);
+        isInputActive = true;
     }
 
     protected override void OnCleanup()
     {
-    
         if (clickAction != null)
         {
             clickAction.performed -= OnClick;
@@ -74,6 +93,8 @@ public class FishingMiniGame : MiniGameBase
 
         if (gamePanel != null)
             gamePanel.SetActive(false);
+            
+        StopAllCoroutines();
     }
 
     private void ResetGameValues()
@@ -83,6 +104,15 @@ public class FishingMiniGame : MiniGameBase
         currentHealth = health;
         isClockwise = true;
         pointer.rotation = Quaternion.identity;
+        isInputActive = false;
+    }
+
+    private void SetupHearts(int count)
+    {
+        foreach(Transform child in heartContainer) Destroy(child.gameObject);
+        activeHearts.Clear();
+        for(int i = 0; i < count; i++) 
+            activeHearts.Add(Instantiate(heartPrefab, heartContainer));
     }
 
     private void CheckHit()
@@ -108,10 +138,11 @@ public class FishingMiniGame : MiniGameBase
         {
             counterText.text = currentCounter.ToString();
         }
-        if (healthText != null)
+       /* if (healthText != null)
         {
             healthText.text = currentHealth.ToString();
         }
+        */
     }
 
     private void ChangeTargetRot()
@@ -129,11 +160,19 @@ public class FishingMiniGame : MiniGameBase
     private void OnFail()
     {
         currentHealth--;
+        
+        if(activeHearts.Count > 0)
+        {
+            GameObject h = activeHearts[activeHearts.Count - 1];
+            activeHearts.Remove(h);
+            Destroy(h);
+        }
+
+        PlaySound(failClip);
         UpdateUI();
 
         if (currentHealth <= 0)
         {
-           
             EndGame(false);
         }
     }
@@ -141,11 +180,11 @@ public class FishingMiniGame : MiniGameBase
     private void OnSuccess()
     {
         currentCounter--;
+        PlaySound(successClip);
         UpdateUI();
 
         if (currentCounter <= 0)
         {
-           
             EndGame(true);
             return;
         }
@@ -155,5 +194,11 @@ public class FishingMiniGame : MiniGameBase
 
         ChangeTargetSize();
         ChangeTargetRot();
+    }
+
+    private void PlaySound(AudioClip clip)
+    {
+        if (clip != null && audioSource != null) 
+            audioSource.PlayOneShot(clip);
     }
 }
