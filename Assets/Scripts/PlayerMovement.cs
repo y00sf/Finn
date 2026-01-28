@@ -93,7 +93,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (jumpAction.WasPressedThisFrame() && isGrounded)
         {
-            Jump();
+           // Jump();
         }
 
         HandleFootsteps();
@@ -243,7 +243,7 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(Physics.gravity * gravityScale, ForceMode.Acceleration);
     }
 
-    private void Jump()
+   /* private void Jump()
     {
         if (dustParticles != null)
         {
@@ -256,7 +256,7 @@ public class PlayerMovement : MonoBehaviour
 
         float jumpForce = Mathf.Sqrt(jumpHeight * -2f * (Physics.gravity.y * gravityScale));
         rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
-    }
+    }*/
 
     private void CheckGround()
     {

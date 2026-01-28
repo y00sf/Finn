@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: TurtleDialogue_AfterFishing
   m_EditorClassIdentifier: 
   dialogueName: TurtleDialogue_AfterFishing
+  npc: {fileID: 11400000, guid: 0c7f253aa2434a24b842e9fb6d81dcd5, type: 2}
   lines:
   - id: line_0
     speakerName: NPC
