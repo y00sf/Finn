@@ -49,6 +49,7 @@ public class FishingManager : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private GameObject catchNotificationPanel;
     [SerializeField] private TextMeshProUGUI catchText;
+    [SerializeField] private Image catchIcon;
     [SerializeField] private Image BaitImage;
     [SerializeField] private float notificationDuration = 3f;
 
@@ -295,6 +296,7 @@ public class FishingManager : MonoBehaviour
         if (catchNotificationPanel == null) return;
         catchNotificationPanel.SetActive(true);
         if (catchText != null) catchText.text = $"Caught: {fish.FishName}!";
+        if (catchIcon != null) catchIcon.sprite = fish.LargeFishSprite;
         StartCoroutine(HideNotificationAfterDelay());
     }
     private IEnumerator HideNotificationAfterDelay()

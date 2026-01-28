@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eacc499f39249774bb6fda681bda2819, type: 3}
-  m_Name: Axolotl
+  m_Name: Ducky
   m_EditorClassIdentifier: 
-  npcName: Axolotl
-  npcBubbleColor: {r: 0.51224226, g: 0.035510845, b: 0.5377358, a: 1}
-  npcTextColor: {r: 1, g: 0.2971698, b: 0.9944877, a: 1}
+  npcName: Ducky
+  npcBubbleColor: {r: 0.9803922, g: 0.654902, b: 0, a: 1}
+  npcTextColor: {r: 0.6075471, g: 0.4058415, b: 0, a: 1}
