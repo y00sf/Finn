@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eacc499f39249774bb6fda681bda2819, type: 3}
   m_Name: Bunny
   m_EditorClassIdentifier: 
-  npcName: bunny
-  npcBubbleColor: {r: 0.51224226, g: 0.035510845, b: 0.5377358, a: 1}
-  npcTextColor: {r: 1, g: 0.2971698, b: 0.9944877, a: 1}
+  npcName: Bunny
+  npcBubbleColor: {r: 0.49411768, g: 0.3137255, b: 0.14901961, a: 1}
+  npcTextColor: {r: 0.9215687, g: 0.6392157, b: 0.36862746, a: 1}
