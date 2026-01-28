@@ -7632,6 +7632,24 @@ MonoBehaviour:
       m_Action: Escape
       m_Flags: 0
     m_Flags: 0
+  RestartGame:
+    m_Name: Restart Game
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 65dd60d0-7496-4e85-ab5a-c36b426df4f8
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 4f6783ea-6e5c-4741-af35-3b144a9a4226
+      m_Path: <Keyboard>/0
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Restart Game
+      m_Flags: 0
+    m_Flags: 0
+  SceneName: Teaser
   fishingCaster: {fileID: 946025399331334368}
   playerInput: {fileID: 2369928000539891134}
   playerInteraction: {fileID: 1568501900587870126}

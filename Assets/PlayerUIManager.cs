@@ -1,5 +1,8 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 
 public class PlayerUIManager : MonoBehaviour
 {
@@ -13,6 +16,11 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] private InputAction inventoryAction;
     [SerializeField] private InputAction settingsAction;
     [SerializeField] private InputAction escapeAction;
+    [SerializeField] private InputAction RestartGame;
+    [SerializeField] private InputAction PixelGame;
+    [SerializeField] private string SceneName;
+    [SerializeField] private UniversalRendererData URD;
+    
 
     [Header("Scripts to Toggle")]
     [SerializeField] private FishingCaster fishingCaster;
@@ -20,6 +28,7 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] private PlayerInteraction playerInteraction;
 
     private bool isAnyPanelOpen = false;
+    private bool isPixelated = false;
 
     private void OnEnable()
     {
@@ -27,11 +36,15 @@ public class PlayerUIManager : MonoBehaviour
         inventoryAction?.Enable();
         settingsAction?.Enable();
         escapeAction?.Enable();
+        RestartGame?.Enable();
+        PixelGame?.Enable();
 
         journalAction.performed += OnJournalPressed;
         inventoryAction.performed += OnInventoryPressed;
         settingsAction.performed += OnSettingsPressed;
         escapeAction.performed += OnEscapePressed;
+        RestartGame.performed += OnRestartPressed;
+        PixelGame.performed += OnPixelGame;
     }
 
     private void OnDisable()
@@ -40,17 +53,29 @@ public class PlayerUIManager : MonoBehaviour
         inventoryAction.performed -= OnInventoryPressed;
         settingsAction.performed -= OnSettingsPressed;
         escapeAction.performed -= OnEscapePressed;
+        RestartGame.performed -= OnRestartPressed;
+        PixelGame.performed -= OnPixelGame;
 
         journalAction?.Disable();
         inventoryAction?.Disable();
         settingsAction?.Disable();
         escapeAction?.Disable();
+        RestartGame?.Disable();
+        PixelGame?.Disable();
+    }
+
+    private void OnRestartPressed(InputAction.CallbackContext ctx)
+    {
+        SceneManager.LoadScene(SceneName);
     }
 
     private void Start()
     {
         CloseAllPanels();
+        
     }
+    
+    
 
     private void OnJournalPressed(InputAction.CallbackContext context)
     {
@@ -73,6 +98,19 @@ public class PlayerUIManager : MonoBehaviour
         {
             CloseAllPanels();
         }
+    }
+
+    private void OnPixelGame(InputAction.CallbackContext context)
+    {
+        TogglePixel();
+    }
+
+    private void TogglePixel()
+    {
+        if (URD == null) return;
+
+        isPixelated = !isPixelated;
+        URD.rendererFeatures[1].SetActive(isPixelated);
     }
 
     private void TogglePanel(GameObject panel)

@@ -295,7 +295,7 @@ public class FishingManager : MonoBehaviour
     {
         if (catchNotificationPanel == null) return;
         catchNotificationPanel.SetActive(true);
-        if (catchText != null) catchText.text = $"Caught: {fish.FishName}!";
+        if (catchText != null) catchText.text = fish.FishName;
         if (catchIcon != null) catchIcon.sprite = fish.LargeFishSprite;
         StartCoroutine(HideNotificationAfterDelay());
     }
