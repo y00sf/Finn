@@ -7429,7 +7429,7 @@ MonoBehaviour:
     m_SingletonActionBindings:
     - m_Name: 
       m_Id: eae41a0f-0e31-4d07-90b3-5054610c720a
-      m_Path: <Mouse>/leftButton
+      m_Path: <Keyboard>/q
       m_Interactions: 
       m_Processors: 
       m_Groups: 
@@ -7437,7 +7437,7 @@ MonoBehaviour:
       m_Flags: 0
     - m_Name: 
       m_Id: 76af3973-f1da-4161-879a-13d4908d41fb
-      m_Path: <Gamepad>/buttonSouth
+      m_Path: <Gamepad>/buttonWest
       m_Interactions: 
       m_Processors: 
       m_Groups: 

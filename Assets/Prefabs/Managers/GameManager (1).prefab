@@ -790,6 +790,68 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &527832440248718516
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 785409460832379411}
+  - component: {fileID: 5912894350585227924}
+  m_Layer: 5
+  m_Name: GameObject (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &785409460832379411
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527832440248718516}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2071131722573171218}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -890, y: 241}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &5912894350585227924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527832440248718516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 81
+    m_Right: 0
+    m_Top: 36
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: -753
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &562016282100870018
 GameObject:
   m_ObjectHideFlags: 0
@@ -6348,6 +6410,7 @@ RectTransform:
   - {fileID: 8891947719377127759}
   - {fileID: 4708280513673063884}
   - {fileID: 1459408453954191414}
+  - {fileID: 785409460832379411}
   m_Father: {fileID: 3167565008648052164}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -8370,7 +8433,9 @@ MonoBehaviour:
   Target: {fileID: 4792532695617928629}
   TargetImage: {fileID: 2125520806029141542}
   counterText: {fileID: 5983163187527751655}
-  healthText: {fileID: 3313594136811095601}
+  heartPrefab: {fileID: 5650252441834520908, guid: d98a9bd38c905e64cb2a1a81a4378d86, type: 3}
+  heartContainer: {fileID: 785409460832379411}
+  startDelay: 1
   clickAction:
     m_Name: Click
     m_Type: 1
@@ -8404,6 +8469,9 @@ MonoBehaviour:
       m_Action: Click
       m_Flags: 0
     m_Flags: 0
+  successClip: {fileID: 0}
+  failClip: {fileID: 0}
+  audioSource: {fileID: 0}
   speed: 150
   speedIncrease: 20
   counterCount: 10
