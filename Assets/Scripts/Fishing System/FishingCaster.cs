@@ -26,6 +26,8 @@ public class FishingCaster : MonoBehaviour
     private bool isCharging = false;
     private float currentValue = 0f;
     private int direction = 1;
+    
+    private GameObject activeBait; 
 
     private FishingManager _fishingManager;
 
@@ -53,15 +55,17 @@ public class FishingCaster : MonoBehaviour
         if (_fishingManager == null)
         {
             _fishingManager = FindObjectOfType<FishingManager>(true);
-            if (_fishingManager == null) Debug.LogError("[FishingCaster] No FishingManager found in scene!");
         }
     }
 
     private void Update()
     {
         if (_fishingManager == null || powerSlider == null) return;
+        
 
-      
+        if (activeBait != null) return;
+        if (MiniGameManager.IsMiniGameActive) return;
+
         bool canCast = _fishingManager.CanCastWithCurrentBait();
 
         if (!canCast)
@@ -76,7 +80,6 @@ public class FishingCaster : MonoBehaviour
             return;
         }
 
-      
         if (castAction != null && castAction.IsPressed())
         {
             if (!powerSlider.gameObject.activeSelf) powerSlider.gameObject.SetActive(true);
@@ -93,13 +96,11 @@ public class FishingCaster : MonoBehaviour
 
     private void ProcessCharge()
     {
-    
         currentValue += direction * chargeSpeed * Time.deltaTime;
 
         if (currentValue >= 100f) { currentValue = 100f; direction = -1; }
         else if (currentValue <= 0f) { currentValue = 0f; direction = 1; }
 
-      
         powerSlider.SetValueWithoutNotify(currentValue);
 
         if (fillImage != null)
@@ -114,7 +115,6 @@ public class FishingCaster : MonoBehaviour
             return;
         }
 
-    
         float percentage = currentValue / 100f;
         float dist = percentage * maxCastDistance;
     
@@ -123,10 +123,8 @@ public class FishingCaster : MonoBehaviour
         flatForward.Normalize();
 
         Vector3 targetPoint = spawnPoint.position + (flatForward * dist);
-
-      
         Vector3 rayOrigin = targetPoint;
-        rayOrigin.y += 50f; // Start high up
+        rayOrigin.y += 50f; 
 
         if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 100f, waterLayer))
         {
@@ -137,8 +135,9 @@ public class FishingCaster : MonoBehaviour
             targetPoint.y = transform.position.y;
         }
         
-        GameObject baitObj = Instantiate(baitPrefab, spawnPoint.position, Quaternion.identity);
-        fishingBait baitScript = baitObj.GetComponent<fishingBait>();
+        activeBait = Instantiate(baitPrefab, spawnPoint.position, Quaternion.identity);
+        
+        fishingBait baitScript = activeBait.GetComponent<fishingBait>();
 
         if (baitScript != null)
         {

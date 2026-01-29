@@ -3,8 +3,9 @@ using UnityEngine.Events;
 
 public class MiniGameManager : MonoBehaviour
 {
+    public static bool IsMiniGameActive = false;
+
     [Header("External Communication")]
-   
     public UnityEvent<string> OnGameStarted; 
     public UnityEvent<string> OnGameWon;
     public UnityEvent<string> OnGameLost;
@@ -22,19 +23,21 @@ public class MiniGameManager : MonoBehaviour
             return;
         }
 
+        IsMiniGameActive = true;
+
         _activeGame = gameToLaunch;
 
         OnGameStarted.Invoke(gameToLaunch.GameID);
-
       
         gameToLaunch.BeginGame(HandleGameResult);
     }
 
-  
     private void HandleGameResult(bool isWin)
     {
         string id = _activeGame.GameID;
         _activeGame = null; 
+
+        IsMiniGameActive = false;
 
         if (isWin)
         {
@@ -54,6 +57,7 @@ public class MiniGameManager : MonoBehaviour
         {
             _activeGame.ForceCleanup();
             _activeGame = null;
+            IsMiniGameActive = false;
         }
     }
 }

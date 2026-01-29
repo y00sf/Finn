@@ -141,7 +141,7 @@ public class ConversationManager : MonoBehaviour
     private System.Collections.IEnumerator EnablePlayerAfterDelay()
     {
    
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.8f);
     
         SetPlayerScriptsEnabled(true);
     }

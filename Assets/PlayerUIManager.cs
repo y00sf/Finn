@@ -18,6 +18,7 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] private InputAction escapeAction;
     [SerializeField] private InputAction RestartGame;
     [SerializeField] private InputAction PixelGame;
+    [SerializeField] private InputAction refillBaitsAction;
     [SerializeField] private string SceneName;
     [SerializeField] private UniversalRendererData URD;
     
@@ -38,6 +39,7 @@ public class PlayerUIManager : MonoBehaviour
         escapeAction?.Enable();
         RestartGame?.Enable();
         PixelGame?.Enable();
+        refillBaitsAction?.Enable();
 
         journalAction.performed += OnJournalPressed;
         inventoryAction.performed += OnInventoryPressed;
@@ -45,6 +47,7 @@ public class PlayerUIManager : MonoBehaviour
         escapeAction.performed += OnEscapePressed;
         RestartGame.performed += OnRestartPressed;
         PixelGame.performed += OnPixelGame;
+        refillBaitsAction.performed += OnRefillBaitsPressed;
     }
 
     private void OnDisable()
@@ -55,6 +58,7 @@ public class PlayerUIManager : MonoBehaviour
         escapeAction.performed -= OnEscapePressed;
         RestartGame.performed -= OnRestartPressed;
         PixelGame.performed -= OnPixelGame;
+        refillBaitsAction.performed -= OnRefillBaitsPressed;
 
         journalAction?.Disable();
         inventoryAction?.Disable();
@@ -62,6 +66,7 @@ public class PlayerUIManager : MonoBehaviour
         escapeAction?.Disable();
         RestartGame?.Disable();
         PixelGame?.Disable();
+        refillBaitsAction?.Disable();
     }
 
     private void OnRestartPressed(InputAction.CallbackContext ctx)
@@ -72,10 +77,15 @@ public class PlayerUIManager : MonoBehaviour
     private void Start()
     {
         CloseAllPanels();
-        
     }
-    
-    
+
+    private void OnRefillBaitsPressed(InputAction.CallbackContext context)
+    {
+        if (FishingManager.Instance != null)
+        {
+            FishingManager.Instance.RefillAllBaits();
+        }
+    }
 
     private void OnJournalPressed(InputAction.CallbackContext context)
     {

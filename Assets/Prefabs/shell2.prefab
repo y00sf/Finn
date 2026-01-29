@@ -221,7 +221,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpawanTransform: {fileID: 2044897161179619082}
   fishingManager: {fileID: 0}
-  spawnInterval: 1
+  spawnInterval: 5
 --- !u!1 &9193908736309876131
 GameObject:
   m_ObjectHideFlags: 0

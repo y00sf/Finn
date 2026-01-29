@@ -1,8 +1,12 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 using System.Collections;
+using Unity.VisualScripting.Dependencies.Sqlite;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 [System.Serializable]
 public class BaitItem
@@ -41,6 +45,9 @@ public class FishingManager : MonoBehaviour
 {
     public static FishingManager Instance { get; private set; }
 
+    [SerializeField] private InputAction GoRight;
+    [SerializeField] private InputAction GoLeft;
+
     [Header("Fish Database")]
     [SerializeField] private FishScriptiableObject[] iceBiomeFish;
     [SerializeField] private FishScriptiableObject[] volcanoBiomeFish;
@@ -55,6 +62,7 @@ public class FishingManager : MonoBehaviour
 
     [Header("Bait Inventory")]
     [SerializeField] public BaitItem[] baits;
+    
     [SerializeField] public int currentBaitIndex = 0;
     [SerializeField] public int durabilityCostPerCast = 1;
 
@@ -79,6 +87,24 @@ public class FishingManager : MonoBehaviour
         Debug.LogWarning($"[FishingManager] The FishingManager on object '{gameObject.name}' was destroyed! Stack Trace: {System.Environment.StackTrace}");
     }
 
+    private void OnEnable()
+    {
+        GoLeft?.Enable();
+        GoRight?.Enable();
+
+        GoLeft.performed += OnGoLeft;
+        GoRight.performed += OnGoRight;
+    }
+
+    private void OnDisable()
+    {
+        GoLeft.performed -= OnGoLeft;
+        GoRight.performed -= OnGoRight;
+        
+        GoLeft?.Disable();
+        GoRight?.Disable();
+    }
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -90,7 +116,6 @@ public class FishingManager : MonoBehaviour
         Instance = this;
 
         ResetAllFishData();
-     
     }
 
     private void Start()
@@ -118,6 +143,21 @@ public class FishingManager : MonoBehaviour
             }
         }
 
+        UpdateDurabilityUI();
+    }
+
+    public void RefillAllBaits()
+    {
+        if (baits == null) return;
+        
+        foreach (var bait in baits)
+        {
+            if (bait != null)
+            {
+                bait.ResetToFull();
+            }
+        }
+        
         UpdateDurabilityUI();
     }
 
@@ -269,11 +309,13 @@ public class FishingManager : MonoBehaviour
     }
 
     public void SetCurrentBiome(BiomeType biome) => currentBiome = biome;
+    
     private FishScriptiableObject SelectRandomFish()
     {
         var pool = GetFishPoolForBiome(currentBiome);
         return (pool != null && pool.Length > 0) ? pool[Random.Range(0, pool.Length)] : null;
     }
+
     private FishScriptiableObject[] GetFishPoolForBiome(BiomeType biome)
     {
         return biome switch
@@ -284,6 +326,7 @@ public class FishingManager : MonoBehaviour
             _ => wildeBiomeFish
         };
     }
+
     private void ProcessCaughtFish(FishScriptiableObject fish)
     {
         fish.collected = true; 
@@ -291,6 +334,7 @@ public class FishingManager : MonoBehaviour
         ShowCatchNotification(fish);
         Debug.Log($"[FishingManager] Caught {fish.FishName}. Marked collected as: {fish.collected}");
     }
+
     private void ShowCatchNotification(FishScriptiableObject fish)
     {
         if (catchNotificationPanel == null) return;
@@ -299,14 +343,17 @@ public class FishingManager : MonoBehaviour
         if (catchIcon != null) catchIcon.sprite = fish.LargeFishSprite;
         StartCoroutine(HideNotificationAfterDelay());
     }
+
     private IEnumerator HideNotificationAfterDelay()
     {
         yield return new WaitForSeconds(notificationDuration);
         if (catchNotificationPanel != null) catchNotificationPanel.SetActive(false);
     }
+
     public bool CanCastWithCurrentBait() => TryGetCurrentBait(out var bait) && bait.CurrentDurability > 0;
     public int GetCurrentBaitDurability() => TryGetCurrentBait(out var bait) ? bait.CurrentDurability : 0;
     public int GetCurrentBaitMaxDurability() => TryGetCurrentBait(out var bait) ? bait.maxDurability : 0;
+    
     private bool TryGetCurrentBait(out BaitItem bait)
     {
         bait = null;
@@ -315,8 +362,6 @@ public class FishingManager : MonoBehaviour
         bait = baits[currentBaitIndex];
         return bait != null;
     }
-    
-    
     
     public System.Collections.Generic.List<FishScriptiableObject> GetAllFish()
     {
@@ -341,6 +386,19 @@ public class FishingManager : MonoBehaviour
                 fish.collected = false; 
             }
         }
-        
     }
+
+    private void OnGoLeft(InputAction.CallbackContext context)
+    {
+        currentBaitIndex--;
+        if(currentBaitIndex < 0){currentBaitIndex = baits.Length -1;}
+        SetCurrentBait(currentBaitIndex);
+    }
+    private void OnGoRight(InputAction.CallbackContext context)
+    {
+        currentBaitIndex++;
+        if(currentBaitIndex > baits.Length -1){currentBaitIndex = 0;}
+        SetCurrentBait(currentBaitIndex);
+    }
+    
 }

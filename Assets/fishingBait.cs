@@ -60,6 +60,7 @@ public class fishingBait : MonoBehaviour
       
         if (Physics.Raycast(transform.position + Vector3.up, Vector3.down, out RaycastHit hit, 10f, waterLayer))
         {
+            Debug.Log(hit.collider.gameObject.name);
             fm.SetCurrentBiome(GetBiomeFromTag(hit.collider.tag));
         }
       
