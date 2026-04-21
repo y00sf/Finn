@@ -8,6 +8,11 @@ public interface IMiniGame
     
     void ForceCleanup();
 }
+
+public interface IDifficultyScaler
+{
+    void SetDifficultyMultiplier(float multiplier);
+}
 public abstract class MiniGameBase : MonoBehaviour, IMiniGame
 {
     [Header("Base Settings")]

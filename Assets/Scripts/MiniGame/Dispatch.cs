@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class Dispatch : MiniGameBase
+public class Dispatch : MiniGameBase, IDifficultyScaler
 {
     [Header("Dispatch Settings")]
     [SerializeField] private RectTransform panel;
@@ -17,6 +17,7 @@ public class Dispatch : MiniGameBase
     [SerializeField] private float initialFillAmount = 100f; 
 
     private Queue<Arrow> currentArrows = new Queue<Arrow>();
+    private float difficultyMultiplier = 1f;
     
    
     public InputAction upAction;
@@ -45,6 +46,7 @@ public class Dispatch : MiniGameBase
         EnableInputs(false);
         foreach(Transform child in panel) Destroy(child.gameObject);
         currentArrows.Clear();
+        difficultyMultiplier = 1f;
     }
 
     private void EnableInputs(bool enable)
@@ -111,7 +113,12 @@ public class Dispatch : MiniGameBase
     
     private void DecreaseSlider()
     {
-        slider.value -= decaySpeed * Time.deltaTime; 
+        slider.value -= decaySpeed * difficultyMultiplier * Time.deltaTime; 
+    }
+
+    public void SetDifficultyMultiplier(float multiplier)
+    {
+        difficultyMultiplier = Mathf.Clamp(multiplier, 0.1f, 5f);
     }
     private void UpdateColor()
     {

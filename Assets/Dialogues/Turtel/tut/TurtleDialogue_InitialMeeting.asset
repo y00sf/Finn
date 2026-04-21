@@ -17,7 +17,7 @@ MonoBehaviour:
   lines:
   - id: line_0
     speakerName: NPC
-    text: ' Boy! Come here!
+    text: ' Boy!<wait=1.5>Come here!
 
 '
     nextNodeID: line_1

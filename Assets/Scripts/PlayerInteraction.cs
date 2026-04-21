@@ -13,14 +13,52 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private Transform PlayerHead;
     [SerializeField] private float headRotationSpeed = 5f;
     [SerializeField] private float maxHeadTurnAngle = 70f;
+    
+    
+    [SerializeField] private HeadTracking headTrackingSystem;
+    [SerializeField] private bool useNewHeadTrackingSystem = true;
+    
     public BaseInteractable interactable;
     public InputAction PlayerInputActions;
 
-    private void OnEnable() => PlayerInputActions.Enable();
+    private Quaternion neutralHeadRotation; 
+    private bool interactionEnabled = true;
+
+    private void Start()
+    {
+        
+        if (headTrackingSystem == null)
+        {
+            headTrackingSystem = GetComponent<HeadTracking>();
+        }
+        
+        if (PlayerHead != null)
+        {
+            neutralHeadRotation = PlayerHead.rotation;
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (interactionEnabled)
+        {
+            PlayerInputActions.Enable();
+        }
+    }
     private void OnDisable() => PlayerInputActions.Disable();
 
     private void Update()
     { 
+        if (!interactionEnabled)
+        {
+            return;
+        }
+
+        if (ConversationManager.Instance != null && ConversationManager.Instance.IsInputLocked())
+        {
+            return;
+        }
+
         SphereCheck();
         HandleInteractionUI(); 
         if (PlayerInputActions.WasPerformedThisFrame())
@@ -40,9 +78,40 @@ public class PlayerInteraction : MonoBehaviour
     
     private void LateUpdate()
     {
+        if (!interactionEnabled)
+        {
+            if (useNewHeadTrackingSystem && headTrackingSystem != null)
+            {
+                headTrackingSystem.ClearLookTarget();
+            }
+            return;
+        }
+
         if (enableHeadTracking)
         {
-            RotateHeadToInteractable();
+            if (useNewHeadTrackingSystem && headTrackingSystem != null)
+            {
+                UpdateHeadTrackingSystem();
+            }
+            else
+            {
+                RotateHeadToInteractable();
+            }
+        }
+    }
+    
+  
+    private void UpdateHeadTrackingSystem()
+    {
+        if (interactable != null)
+        {
+            
+            headTrackingSystem.SetLookTarget(interactable.transform);
+        }
+        else
+        {
+          
+            headTrackingSystem.ClearLookTarget();
         }
     }
     
@@ -52,19 +121,16 @@ public class PlayerInteraction : MonoBehaviour
 
         Quaternion finalTargetRotation;
 
-        
         if (interactable != null)
         {
-            
             Vector3 directionToTarget = interactable.transform.position - PlayerHead.position;
-        
             
-            directionToTarget.y = 0;
-        
+            // Remove vertical component for horizontal-only tracking (optional)
+            // directionToTarget.y = 0;
             
-            if (directionToTarget.sqrMagnitude < 0.001f) directionToTarget = transform.forward;
+            if (directionToTarget.sqrMagnitude < 0.001f) 
+                directionToTarget = transform.forward;
 
-            
             Quaternion idealLookRotation = Quaternion.LookRotation(directionToTarget);
             
             finalTargetRotation = Quaternion.RotateTowards(
@@ -73,14 +139,14 @@ public class PlayerInteraction : MonoBehaviour
                 maxHeadTurnAngle
             );
         }
-       
         else
         {
-           
-            finalTargetRotation = transform.rotation;
+        
+            finalTargetRotation = neutralHeadRotation;
         }
         
-        PlayerHead.rotation = Quaternion.Slerp(
+     
+        PlayerHead.rotation = Quaternion.Lerp(
             PlayerHead.rotation, 
             finalTargetRotation, 
             Time.deltaTime * headRotationSpeed
@@ -149,5 +215,38 @@ public class PlayerInteraction : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawRay(interactionTransform.position, interactionTransform.forward * interactionDistance);
         }
+    }
+
+    public void SetInteractionEnabled(bool enabled)
+    {
+        if (interactionEnabled == enabled) return;
+        interactionEnabled = enabled;
+
+        if (interactionEnabled)
+        {
+            PlayerInputActions.Enable();
+            return;
+        }
+
+        PlayerInputActions.Disable();
+
+        if (interactionUI != null) interactionUI.SetActive(false);
+        if (interactable != null) interactable.UnInteract();
+        interactable = null;
+
+        if (useNewHeadTrackingSystem && headTrackingSystem != null)
+        {
+            headTrackingSystem.ClearLookTarget();
+        }
+    }
+
+    public Vector3 GetInteractionOrigin()
+    {
+        return interactionTransform != null ? interactionTransform.position : transform.position;
+    }
+
+    public float GetInteractionDistance()
+    {
+        return interactionDistance;
     }
 }

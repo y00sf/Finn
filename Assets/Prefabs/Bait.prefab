@@ -123,10 +123,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flightTime: 1.5
   arcHeight: 5
+  flightCollisionRadius: 0.15
+  impactSurfaceOffset: 0.05
   biomeDetectionRadius: 0.57
   waterLayer:
     serializedVersion: 2
     m_Bits: 16
-  terrainLayer:
+  terrainCollisionMask:
     serializedVersion: 2
     m_Bits: 8
+  waterDetectionRayHeight: 1
+  waterDetectionRayDistance: 10
+  reelSpeed: 6
+  catchDistance: 5
+  reelSurfaceOffset: 0
+  struggleSwayAmplitude: 0.7
+  struggleSwayFrequency: 8
+  struggleTurnSpeed: 360
+  strugglePullFrequency: 0.63
+  strugglePullAwayMultiplier: 0.79
+  struggleLateralSpeed: 0.92
+  fightPositionLerpSpeed: 14
+  fightEscapeDistanceMultiplier: 1.35
+  fightCatchProgressThreshold: 0.98
+  waterSplashPrefab: {fileID: 1038888811398006806, guid: 7c2f8f48ca56bcc43927d42163258941, type: 3}
+  splashAutoDestroyDelay: 4

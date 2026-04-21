@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-public class ButtonMashing : MiniGameBase
+public class ButtonMashing : MiniGameBase, IDifficultyScaler
 {
     [Header("Mashing Settings")]
     [SerializeField] private Slider slider;
@@ -14,6 +14,7 @@ public class ButtonMashing : MiniGameBase
     
     [SerializeField] private float increaseAmount = 10f;
     [SerializeField] private float decaySpeed = 25f;
+    private float difficultyMultiplier = 1f;
 
     protected override void OnStart()
     {
@@ -30,6 +31,7 @@ public class ButtonMashing : MiniGameBase
     {
         mashAction.Disable();
         mashAction.performed -= OnMash;
+        difficultyMultiplier = 1f;
     }
 
     private void OnMash(InputAction.CallbackContext context)
@@ -50,7 +52,12 @@ public class ButtonMashing : MiniGameBase
     }
 
     private void IncreaseSlider() => slider.value += increaseAmount;
-    private void DecreaseSlider() => slider.value -= decaySpeed * Time.deltaTime;
+    private void DecreaseSlider() => slider.value -= decaySpeed * difficultyMultiplier * Time.deltaTime;
+
+    public void SetDifficultyMultiplier(float multiplier)
+    {
+        difficultyMultiplier = Mathf.Clamp(multiplier, 0.1f, 5f);
+    }
 
     private void UpdateColor()
     {

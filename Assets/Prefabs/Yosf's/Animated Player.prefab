@@ -7187,6 +7187,7 @@ GameObject:
   - component: {fileID: 946025399331334368}
   - component: {fileID: 4710152526124520526}
   - component: {fileID: 7796986012734960284}
+  - component: {fileID: 2406041720347587459}
   m_Layer: 0
   m_Name: Animated Player
   m_TagString: Player
@@ -7331,6 +7332,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   animator: {fileID: 7903513084677840899}
+  rb: {fileID: 0}
 --- !u!114 &1568501900587870126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7350,6 +7352,8 @@ MonoBehaviour:
   PlayerHead: {fileID: 6474518077237241694}
   headRotationSpeed: 5
   maxHeadTurnAngle: 80
+  headTrackingSystem: {fileID: 0}
+  useNewHeadTrackingSystem: 1
   interactable: {fileID: 0}
   PlayerInputActions:
     m_Name: Player Input Actions
@@ -7415,7 +7419,7 @@ MonoBehaviour:
     m_NumColorKeys: 3
     m_NumAlphaKeys: 2
   chargeSpeed: 100
-  maxCastDistance: 20
+  maxCastDistance: 30
   waterLayer:
     serializedVersion: 2
     m_Bits: 16
@@ -7649,10 +7653,60 @@ MonoBehaviour:
       m_Action: Restart Game
       m_Flags: 0
     m_Flags: 0
+  PixelGame:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: d77bccf0-ac77-4af0-b746-ce37fe88c6cb
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  refillBaitsAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 1e47d265-b60c-4b62-9b80-57141e7ec546
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   SceneName: Teaser
+  URD: {fileID: 0}
   fishingCaster: {fileID: 946025399331334368}
   playerInput: {fileID: 2369928000539891134}
   playerInteraction: {fileID: 1568501900587870126}
+--- !u!114 &2406041720347587459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8173407782958523211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2402abd5c908cb4097031f613916b98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  headBone: {fileID: 6474518077237241694}
+  maxHorizontalAngle: 70
+  maxVerticalAngle: 30
+  headSmoothSpeed: 5
+  virtualCamera: {fileID: 0}
+  cameraOffsetAmount: 8
+  cameraSmoothSpeed: 2
+  useMousePosition: 0
+  useGamepad: 1
+  mouseSensitivity: 1
+  gamepadSensitivity: 60
+  inputDeadzone: 0.1
+  inputSmoothing: 10
+  autoResetWhenIdle: 1
+  resetSpeed: 15
+  idleTimeBeforeReset: 0.15
+  allowExternalTarget: 1
+  externalTargetWeight: 1
+  externalTargetSmoothSpeed: 5
 --- !u!1 &8260778905026237690
 GameObject:
   m_ObjectHideFlags: 0

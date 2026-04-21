@@ -9,6 +9,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float accelerationTime = 0.1f;
     [SerializeField] private float decelerationTime = 0.25f;
     [SerializeField] private float turnSmoothTime = 0.15f;
+    
+    [Header("Swimming Physics")]
+    [SerializeField] private float swimSpeed = 15f;
+    [SerializeField] private bool isSwimming = false;
 
     [Header("Jump & Gravity")]
     [SerializeField] private float jumpHeight = 2f;
@@ -19,6 +23,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask groundLayers;
     [SerializeField] private float groundCheckOffset = 0.1f;
     [SerializeField] private float groundCheckRadius = 0.25f;
+    [SerializeField] private LayerMask SwimmingLayers;
+    [SerializeField] private float SwimmingCheckOffset = 0.1f;
+    [SerializeField] private float SwimmingCheckRadius = 0.25f;
 
     [Header("Audio Settings")]
     [SerializeField] private AudioClip[] footstepSounds;
@@ -55,6 +62,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isGrounded;
     private float stepCycleTimer;
     private bool isRightFootStep = false;
+    private bool movementEnabled = true;
 
     private void Awake()
     {
@@ -89,11 +97,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (!movementEnabled)
+        {
+            if (animator != null)
+            {
+                animator.SetFloat("Speed", 0f);
+                animator.SetBool("IsGrounded", isGrounded);
+            }
+            return;
+        }
+
         input = moveAction.ReadValue<Vector2>();
 
         if (jumpAction.WasPressedThisFrame() && isGrounded)
-        {
-           // Jump();
+        { 
+            Jump();
         }
 
         HandleFootsteps();
@@ -104,6 +122,13 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         CheckGround();
+        CheckSwimming();
+        if (!movementEnabled)
+        {
+            rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+            ApplyGravity();
+            return;
+        }
         Move();
         ApplyGravity();
     }
@@ -135,7 +160,7 @@ public class PlayerMovement : MonoBehaviour
     {
         float targetSmoothTime;
 
-        if (isGrounded)
+        if (isGrounded || isSwimming)
         {
             if (input.sqrMagnitude >= 0.01f)
             {
@@ -243,7 +268,7 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(Physics.gravity * gravityScale, ForceMode.Acceleration);
     }
 
-   /* private void Jump()
+   private void Jump()
     {
         if (dustParticles != null)
         {
@@ -256,16 +281,32 @@ public class PlayerMovement : MonoBehaviour
 
         float jumpForce = Mathf.Sqrt(jumpHeight * -2f * (Physics.gravity.y * gravityScale));
         rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
-    }*/
+    }
 
     private void CheckGround()
     {
         isGrounded = Physics.CheckSphere(transform.position + Vector3.up * groundCheckOffset, groundCheckRadius, groundLayers);
     }
 
+    private void CheckSwimming()
+    {
+        isSwimming = Physics.CheckSphere(transform.position + Vector3.up * SwimmingCheckOffset, SwimmingCheckRadius, SwimmingLayers);
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = isGrounded ? Color.green : Color.red;
         Gizmos.DrawWireSphere(transform.position + Vector3.up * groundCheckOffset, groundCheckRadius);
+    }
+
+    public void SetMovementEnabled(bool enabled)
+    {
+        movementEnabled = enabled;
+        if (!movementEnabled)
+        {
+            input = Vector2.zero;
+            currentVelocity = Vector3.zero;
+            rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+        }
     }
 }

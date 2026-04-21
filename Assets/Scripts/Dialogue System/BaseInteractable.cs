@@ -4,12 +4,15 @@ public enum InteractionType
     Door,
     Item,
     Toggle,
-    NPC
+    NPC,
+    Sit,
+    Sign,
+    Collectable,
 }
 
 public class BaseInteractable : MonoBehaviour
 {
-    [HideInInspector] public InteractionType interactionType;
+     public InteractionType interactionType;
     [HideInInspector] public BaseInteractable interactable;
     public void Interact()
     {
@@ -27,6 +30,16 @@ public class BaseInteractable : MonoBehaviour
             case InteractionType.NPC:
                 InteractNPC();
                 break;
+            case InteractionType.Sit:
+                InteractSit();
+                break;
+            case InteractionType.Sign:
+                InteractSign();
+                break;
+            case InteractionType.Collectable:
+                InteractCollectable();
+                break;
+                
             default:
                 Debug.LogWarning("Unknown interaction type");
                 break;
@@ -46,6 +59,12 @@ public class BaseInteractable : MonoBehaviour
                 UnInteractToggle();
                 break;
             case InteractionType.NPC:
+                return;
+                break;
+            case InteractionType.Sit:
+                return;
+                break;
+            case InteractionType.Collectable:
                 return;
                 break;
             default:
@@ -77,6 +96,23 @@ public class BaseInteractable : MonoBehaviour
     protected virtual void InteractNPC()
     {
         Debug.Log("Interacted with NPC");
+    }
+
+    protected virtual void InteractSit()
+    {
+       GetComponent<Sit>().ToggleSit();
+    }
+
+    protected virtual void InteractSign()
+    {
+        GetComponent<Sign>().ShowSign();
+    }
+
+    protected virtual void InteractCollectable()
+    {
+        PlayerCollectableTracker tracker = FindObjectOfType<PlayerCollectableTracker>();
+        
+        GetComponent<Collectable>().Collect(tracker);
     }
 
 }

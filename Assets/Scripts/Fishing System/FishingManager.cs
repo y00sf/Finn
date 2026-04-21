@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 using System.Collections;
-using Unity.VisualScripting.Dependencies.Sqlite;
+//using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -74,6 +74,16 @@ public class FishingManager : MonoBehaviour
     [Header("Global MiniGames")] 
     [SerializeField] private FishingMiniGame finalReelingGame; 
 
+    [Header("Player Control Lock")]
+    [SerializeField] private bool lockPlayerDuringFishing = true;
+    [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private PlayerInteraction playerInteraction;
+
+    [Header("MiniGame Difficulty")]
+    [SerializeField] private bool scaleMiniGameDifficultyByCast = true;
+    [SerializeField] private float nearThrowDecayMultiplier = 1.5f;
+    [SerializeField] private float farThrowDecayMultiplier = 0.6f;
+
     [Header("Events")]
     public UnityEvent<FishScriptiableObject> OnFishCaught;
     public UnityEvent OnFishEscaped;
@@ -81,6 +91,12 @@ public class FishingManager : MonoBehaviour
     [SerializeField] private BiomeType currentBiome = BiomeType.WiledBiome;
     private FishScriptiableObject currentFishData;
     private IMiniGame _activeMiniGame;
+    private bool isPlayerLocked;
+    private float lastCastStrength = 1f;
+    private fishingBait activeBait;
+    private bool baitAtPlayer;
+    private bool minigameResolved;
+    private bool fishHooked;
 
     private void OnDestroy()
     {
@@ -115,6 +131,7 @@ public class FishingManager : MonoBehaviour
         }
         Instance = this;
 
+        ResolvePlayerReferences();
         ResetAllFishData();
     }
 
@@ -171,31 +188,135 @@ public class FishingManager : MonoBehaviour
         UpdateDurabilityUI();
     }
 
-    public void OnBaitLanded()
+    public void OnBaitLanded(fishingBait landedBait, float surfaceY)
     {
-        if (baits == null || baits.Length == 0) return;
-        var bait = baits[currentBaitIndex];
-        if (bait == null) return;
+        currentFishData = null;
+        activeBait = landedBait;
+        if (activeBait != null)
+        {
+            activeBait.SetFishStruggling(false);
+        }
+        baitAtPlayer = false;
+        minigameResolved = false;
+        fishHooked = false;
+
+        if (baits == null || baits.Length == 0)
+        {
+            minigameResolved = true;
+            return;
+        }
+        var baitItem = baits[currentBaitIndex];
+        if (baitItem == null)
+        {
+            minigameResolved = true;
+            return;
+        }
         
-        if (!bait.Consume(durabilityCostPerCast))
+        if (!baitItem.Consume(durabilityCostPerCast))
         {
             Debug.Log("[FishingManager] Not enough durability.");
             UpdateDurabilityUI();
+            minigameResolved = true;
             return;
         }
 
         UpdateDurabilityUI();
 
         currentFishData = SelectRandomFish();
-        if (currentFishData == null) return;
-
-        if (bait.MiniGame == null)
+        if (currentFishData == null)
         {
-            Debug.LogError($"[FishingManager] Bait '{bait.name}' has NO minigame assigned!");
+            minigameResolved = true;
             return;
         }
 
-        LaunchMiniGameForBait(bait.MiniGame);
+        if (baitItem.MiniGame == null)
+        {
+            Debug.LogError($"[FishingManager] Bait '{baitItem.name}' has NO minigame assigned!");
+            minigameResolved = true;
+            return;
+        }
+
+        LaunchMiniGameForBait(baitItem.MiniGame);
+    }
+
+    public void OnBaitReeledIn()
+    {
+        SetFishingLock(false);
+        baitAtPlayer = true;
+
+        if (!minigameResolved && _activeMiniGame is FishingMiniGame)
+        {
+            _activeMiniGame.ForceCleanup();
+            _activeMiniGame = null;
+            HandleFishWin();
+            return;
+        }
+
+        if (minigameResolved)
+        {
+            TryCompleteCatch();
+            ResolveActiveBait();
+        }
+    }
+
+    public void SetFishingLock(bool locked)
+    {
+        if (!lockPlayerDuringFishing) return;
+        if (isPlayerLocked == locked) return;
+        isPlayerLocked = locked;
+
+        if (playerMovement != null) playerMovement.SetMovementEnabled(!locked);
+        if (playerInteraction != null) playerInteraction.SetInteractionEnabled(!locked);
+    }
+
+    public void SetLastCastStrength(float strength)
+    {
+        lastCastStrength = Mathf.Clamp01(strength);
+    }
+
+    public void SetActiveBaitFightProgress01(float progress01)
+    {
+        if (activeBait == null) return;
+        activeBait.SetFightProgress01(progress01);
+    }
+
+    private void ApplyMiniGameDifficulty(IMiniGame game)
+    {
+        if (!scaleMiniGameDifficultyByCast) return;
+        if (game is not IDifficultyScaler scaler) return;
+
+        float decayMultiplier = Mathf.Lerp(nearThrowDecayMultiplier, farThrowDecayMultiplier, lastCastStrength);
+        scaler.SetDifficultyMultiplier(decayMultiplier);
+    }
+
+    private void ResolvePlayerReferences()
+    {
+        if (playerMovement == null)
+        {
+            playerMovement = FindObjectOfType<PlayerMovement>(true);
+        }
+
+        if (playerInteraction == null)
+        {
+            playerInteraction = FindObjectOfType<PlayerInteraction>(true);
+        }
+    }
+
+    private void TryCompleteCatch()
+    {
+        if (!fishHooked) return;
+        if (currentFishData == null) return;
+
+        ProcessCaughtFish(currentFishData);
+        currentFishData = null;
+    }
+
+    private void ResolveActiveBait()
+    {
+        if (activeBait == null) return;
+        activeBait.SetFishStruggling(false);
+        activeBait.ResolveReel();
+        activeBait = null;
     }
 
     private void LaunchMiniGameForBait(IMiniGame game)
@@ -237,6 +358,12 @@ public class FishingManager : MonoBehaviour
         }
 
         _activeMiniGame = game;
+        ApplyMiniGameDifficulty(game);
+
+        if (activeBait != null)
+        {
+            activeBait.SetFishStruggling(true);
+        }
         
         if (gameMono != null) 
         {
@@ -260,9 +387,7 @@ public class FishingManager : MonoBehaviour
         {
             if (_activeMiniGame == finalReelingGame)
             {
-                if (currentFishData != null)
-                    ProcessCaughtFish(currentFishData);
-
+                HandleFishWin();
                 _activeMiniGame = null;
             }
             else 
@@ -273,16 +398,50 @@ public class FishingManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogWarning("[FishingManager] No Final Reeling Game assigned! Catching immediately.");
-                    ProcessCaughtFish(currentFishData);
+                    HandleFishWin();
                     _activeMiniGame = null;
                 }
             }
         }
         else
         {
-            OnFishEscaped?.Invoke();
+            HandleFishLoss();
             _activeMiniGame = null;
+        }
+    }
+
+    private void HandleFishWin()
+    {
+        minigameResolved = true;
+        fishHooked = true;
+        SetFishingLock(false);
+        if (activeBait != null)
+        {
+            activeBait.SetFishStruggling(false);
+            activeBait.SnapToReelTarget();
+        }
+
+        baitAtPlayer = true;
+        TryCompleteCatch();
+        ResolveActiveBait();
+    }
+
+    private void HandleFishLoss()
+    {
+        minigameResolved = true;
+        fishHooked = false;
+        SetFishingLock(false);
+        currentFishData = null;
+        if (activeBait != null)
+        {
+            activeBait.SetFishStruggling(false);
+        }
+
+        OnFishEscaped?.Invoke();
+
+        if (baitAtPlayer)
+        {
+            ResolveActiveBait();
         }
     }
 
@@ -332,6 +491,7 @@ public class FishingManager : MonoBehaviour
         fish.collected = true; 
         OnFishCaught?.Invoke(fish);
         ShowCatchNotification(fish);
+        fishHooked = false;
         Debug.Log($"[FishingManager] Caught {fish.FishName}. Marked collected as: {fish.collected}");
     }
 

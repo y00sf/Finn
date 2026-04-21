@@ -2,15 +2,21 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
+using ModularMotion.Core;
 
 public class DialogueUI : MonoBehaviour
 {
+    public event Action<char> OnNpcCharacterRevealed;
+
     [Header("Input Settings")]
     [Tooltip("Define your key here. Click (+) -> Add Binding -> Press 'E'")] 
     public InputAction advanceAction; 
 
     [Header("Position Settings")]
-    public float heightOffset = 2.5f;
+    [FormerlySerializedAs("heightOffset")]
+    public float npcHeightOffset = 2.5f;
+    public float playerHeightOffset = 2.5f;
     public Transform playerTransform;
 
     [Header("Bubble References")]
@@ -29,8 +35,11 @@ public class DialogueUI : MonoBehaviour
 
     private void Start()
     {
-      
-        
+        if (npcBubble != null)
+        {
+            npcBubble.OnCharacterRevealed += HandleNpcCharacterRevealed;
+        }
+
         if (mainCanvasContainer != null) mainCanvasContainer.SetActive(false);
         HideBubbles();
     }
@@ -41,20 +50,14 @@ public class DialogueUI : MonoBehaviour
      
         if (mainCanvasContainer != null && !mainCanvasContainer.activeSelf) return;
 
- 
-        Camera mainCam = Camera.main;
-        if (mainCam == null) return;
-        
         if (npcBubble != null && npcBubble.gameObject.activeSelf && currentNpcTransform != null)
         {
-            Vector3 worldPos = currentNpcTransform.position + Vector3.up * heightOffset;
-            npcBubble.transform.position = mainCam.WorldToScreenPoint(worldPos);
+            PositionBubble(npcBubble, currentNpcTransform, npcHeightOffset);
         }
         
         if (playerBubble != null && playerBubble.gameObject.activeSelf && playerTransform != null)
         {
-            Vector3 worldPos = playerTransform.position + Vector3.up * heightOffset;
-            playerBubble.transform.position = mainCam.WorldToScreenPoint(worldPos);
+            PositionBubble(playerBubble, playerTransform, playerHeightOffset);
         }
     }
    
@@ -69,6 +72,14 @@ public class DialogueUI : MonoBehaviour
     {
         advanceAction.performed -= OnAdvanceInput;
         advanceAction.Disable();
+    }
+
+    private void OnDestroy()
+    {
+        if (npcBubble != null)
+        {
+            npcBubble.OnCharacterRevealed -= HandleNpcCharacterRevealed;
+        }
     }
 
     private void OnAdvanceInput(InputAction.CallbackContext context)
@@ -95,6 +106,11 @@ public class DialogueUI : MonoBehaviour
     private void TriggerContinue()
     {
         OnContinueClicked?.Invoke();
+    }
+
+    private void HandleNpcCharacterRevealed(char revealedCharacter)
+    {
+        OnNpcCharacterRevealed?.Invoke(revealedCharacter);
     }
 
     public void SetCurrentNPC(Transform npc)
@@ -136,11 +152,8 @@ public class DialogueUI : MonoBehaviour
     {
         if (npcBubble != null)
         {
-            if (currentNpcTransform != null)
-                npcBubble.transform.position = currentNpcTransform.position + Vector3.up * heightOffset;
-
             npcBubble.gameObject.SetActive(true);
-           
+            PositionBubble(npcBubble, currentNpcTransform, npcHeightOffset);
             npcBubble.SetText(text, true); 
         }
     }
@@ -149,11 +162,21 @@ public class DialogueUI : MonoBehaviour
     {
         if (playerBubble != null)
         {
-            if (playerTransform != null)
-                playerBubble.transform.position = playerTransform.position + Vector3.up * heightOffset;
-
             playerBubble.gameObject.SetActive(true);
+            PositionBubble(playerBubble, playerTransform, playerHeightOffset);
             playerBubble.SetText(text, true);
         }
+    }
+
+    private void PositionBubble(DynamicChatBubble bubble, Transform anchor, float heightOffset)
+    {
+        if (bubble == null || anchor == null) return;
+
+        Camera mainCam = Camera.main;
+        if (mainCam == null) return;
+
+        Vector3 worldPos = anchor.position + Vector3.up * heightOffset;
+        Vector3 screenPos = mainCam.WorldToScreenPoint(worldPos);
+        bubble.SetAnchorScreenPosition(screenPos);
     }
 }
