@@ -9,6 +9,7 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private Transform interactionTransform;
     [SerializeField] private float interactionDistance = 0.5f;
     [SerializeField] [CanBeNull] private GameObject interactionUI;
+    [SerializeField] private Animation interactionUIAnimation;
     [SerializeField] private bool enableHeadTracking = true;
     [SerializeField] private Transform PlayerHead;
     [SerializeField] private float headRotationSpeed = 5f;
@@ -23,7 +24,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private Quaternion neutralHeadRotation; 
     private bool interactionEnabled = true;
+   [SerializeField] private Animator anim;
 
+    private void Awake()
+    {
+        anim = GetComponent<Animator>();
+    }
     private void Start()
     {
         
@@ -161,6 +167,7 @@ public class PlayerInteraction : MonoBehaviour
             if (interactable.interactionType != InteractionType.Item)
             {
                 interactionUI.SetActive(true);
+                anim.Play("ShowThought");
             }
             else
             {
@@ -169,8 +176,17 @@ public class PlayerInteraction : MonoBehaviour
         }
         else
         {
-            if (interactionUI != null) interactionUI.SetActive(false);
+            if (interactionUI != null)
+            {
+                anim.Play("HideThought");
+                
+            }
         }
+    }
+    public void OnHideThoughtFinished()
+    {
+        if (interactionUI != null)
+            interactionUI.SetActive(false);
     }
     
     private void SphereCheck()

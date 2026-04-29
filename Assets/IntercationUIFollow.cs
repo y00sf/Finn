@@ -29,7 +29,10 @@ public class IntercationUIFollow : MonoBehaviour
                 Vector3 worldTarget = player.position + b.offset;
                 Vector3 screenTarget = mainCam.WorldToScreenPoint(worldTarget);
                 b.image.position = Vector3.Lerp(b.image.position, screenTarget, lerpSpeed * Time.deltaTime);
+                
             }
         }
     }
+
+   
 }

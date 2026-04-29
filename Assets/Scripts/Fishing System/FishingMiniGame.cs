@@ -70,6 +70,7 @@ public class FishingMiniGame : MiniGameBase, IDifficultyScaler
         float fishPull = GetCurrentFishPullPerSecond();
         currentProgress -= fishPull * Time.deltaTime;
         currentProgress = Mathf.Clamp(currentProgress, 0f, catchProgress);
+        reelWheelVisual.Rotate(0f, 0f, -baseFishPullPerSecond);
 
         Vector2 reelDirection;
         try
